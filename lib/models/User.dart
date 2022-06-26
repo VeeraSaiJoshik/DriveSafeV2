@@ -10,6 +10,18 @@ class User {
   List friendRequests;
   List location;
   String image;
-  User(this.firstName, this.lastName, this.phoneNumber, this.age,
-      this.friendRequests, this.friends, this.location, this.image, this.password);
+  /* bool numberApproved;
+  bool locationTrackingOn;
+  List numberList;*/
+
+  User(
+      this.firstName,
+      this.lastName,
+      this.phoneNumber,
+      this.age,
+      this.friendRequests,
+      this.friends,
+      this.location,
+      this.image,
+      this.password);
 }

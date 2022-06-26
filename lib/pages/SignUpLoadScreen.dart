@@ -8,6 +8,7 @@ import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:drivesafev2/models/User.dart';
 import 'DriveSafeHomePage.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:random_string_generator/random_string_generator.dart';
 
 class SignUpLoadScreen extends StatefulWidget {
   User appUser;

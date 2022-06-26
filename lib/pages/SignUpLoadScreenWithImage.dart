@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +9,7 @@ import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:drivesafev2/models/User.dart';
 import 'DriveSafeHomePage.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:random_string_generator/random_string_generator.dart';
 
 class SignUpLoadScreenWithImage extends StatefulWidget {
   User appUser;
@@ -15,6 +17,14 @@ class SignUpLoadScreenWithImage extends StatefulWidget {
   @override
   SignUpLoadScreenWithImageState createState() =>
       SignUpLoadScreenWithImageState();
+}
+
+String createRandomPhoneNumber() {
+  String phoneNumber = "+1";
+  for (int i = 0; i < 10; i++) {
+    phoneNumber = phoneNumber + Random().toString();
+  }
+  return phoneNumber;
 }
 
 class SignUpLoadScreenWithImageState extends State<SignUpLoadScreenWithImage> {
@@ -34,8 +44,35 @@ class SignUpLoadScreenWithImageState extends State<SignUpLoadScreenWithImage> {
     });
   }
 
+  void uploadTestData() async {
+    RandomStringGenerator firstNames = RandomStringGenerator(
+        hasAlpha: true,
+        hasDigits: false,
+        hasSymbols: false,
+        minLength: 5,
+        maxLength: 10);
+    for (int i = 0; i < 100; i++) {
+      await FirebaseDatabase.instance.ref("User").update({
+        createRandomPhoneNumber(): {
+          "age": 20,
+          "firstName": firstNames.generate(),
+          "lastName": firstNames.generate(),
+          "friendReqeusts": widget.appUser.friendRequests,
+          "image": "",
+          "password": widget.appUser.password,
+          "friends": widget.appUser.friends,
+          "location": widget.appUser.location,
+          "phoneNumber": widget.appUser.phoneNumber,
+          "numberApproved": false,
+          "locationTrackingOn": false,
+          "phoneNumbersChosen" : []
+        }
+      });
+    }
+  }
+
   void initState() {
-    upload();
+    uploadTestData();
     super.initState();
   }
 

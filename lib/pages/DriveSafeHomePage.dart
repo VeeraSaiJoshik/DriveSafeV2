@@ -11,26 +11,25 @@ class DriveSafeHomePage extends StatefulWidget {
   _DriveSafeHomePageState createState() => _DriveSafeHomePageState();
 }
 
-class _DriveSafeHomePageState extends State<DriveSafeHomePage> with SingleTickerProviderStateMixin{
+class _DriveSafeHomePageState extends State<DriveSafeHomePage>
+    with SingleTickerProviderStateMixin {
   @override
-  
   late final AnimationController controller;
 
-  void inistState(){
-    controller = AnimationController(vsync: this, duration: const Duration(seconds: 2));
+  void inistState() {
+    controller =
+        AnimationController(vsync: this, duration: const Duration(seconds: 2));
     super.initState();
   }
 
-  void dispose(){
-
-  }
+  void dispose() {}
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
     String fullName;
     double textSize = MediaQuery.of(context).textScaleFactor;
     Color mainColor = Colors.grey.shade300;
-    
+
     return Scaffold(
         backgroundColor: mainColor,
         body: Center(
@@ -90,7 +89,9 @@ class _DriveSafeHomePageState extends State<DriveSafeHomePage> with SingleTicker
                           width: width * (0.9 - 0.025) / 2,
                           height: height * 0.46 / 2,
                           child: NeumorphicButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.pushNamed(context, "mainPage");
+                            },
                             child: Stack(
                               children: [
                                 Container(
