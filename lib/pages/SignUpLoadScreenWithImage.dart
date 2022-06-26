@@ -22,7 +22,7 @@ class SignUpLoadScreenWithImage extends StatefulWidget {
 String createRandomPhoneNumber() {
   String phoneNumber = "+1";
   for (int i = 0; i < 10; i++) {
-    phoneNumber = phoneNumber + Random().toString();
+    phoneNumber = phoneNumber + Random().nextInt(9).toString();
   }
   return phoneNumber;
 }
@@ -45,19 +45,37 @@ class SignUpLoadScreenWithImageState extends State<SignUpLoadScreenWithImage> {
   }
 
   void uploadTestData() async {
-    RandomStringGenerator firstNames = RandomStringGenerator(
-        hasAlpha: true,
-        hasDigits: false,
-        hasSymbols: false,
-        minLength: 5,
-        maxLength: 10);
+    List firsNames = [
+      "Kevin",
+      "Cristiano",
+      "Lionel",
+      "Rubin",
+      "John",
+      "Ronaldo",
+      "Paulo",
+      "David",
+      "Alphonso",
+      "Jack"
+    ];
+    List lastNames = [
+      "De Bruyne",
+      "Ronaldo",
+      "Messi",
+      "Dias",
+      "Stones",
+      "Nazario",
+      "Dybala",
+      "Beckham",
+      "Davies",
+      "Grealish"
+    ];
     for (int i = 0; i < 100; i++) {
       await FirebaseDatabase.instance.ref("User").update({
         createRandomPhoneNumber(): {
           "age": 20,
-          "firstName": firstNames.generate(),
-          "lastName": firstNames.generate(),
-          "friendReqeusts": widget.appUser.friendRequests,
+          "firstName": firsNames[(i / 10).toInt()],
+          "lastName": lastNames[(i % 10).toInt()],
+          "friendReqeusts": "",
           "image": "",
           "password": widget.appUser.password,
           "friends": widget.appUser.friends,
@@ -65,7 +83,7 @@ class SignUpLoadScreenWithImageState extends State<SignUpLoadScreenWithImage> {
           "phoneNumber": widget.appUser.phoneNumber,
           "numberApproved": false,
           "locationTrackingOn": false,
-          "phoneNumbersChosen" : []
+          "phoneNumbersChosen": []
         }
       });
     }

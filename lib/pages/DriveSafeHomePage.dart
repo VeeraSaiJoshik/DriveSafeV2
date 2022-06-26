@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:drivesafev2/models/User.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
@@ -10,6 +11,8 @@ class DriveSafeHomePage extends StatefulWidget {
   @override
   _DriveSafeHomePageState createState() => _DriveSafeHomePageState();
 }
+
+// Main test case : 2670440300
 
 class _DriveSafeHomePageState extends State<DriveSafeHomePage>
     with SingleTickerProviderStateMixin {
@@ -47,10 +50,28 @@ class _DriveSafeHomePageState extends State<DriveSafeHomePage>
                     intensity: 1,
                     border: NeumorphicBorder(
                         color: Colors.blue, width: height * 0.01)),
-                child: CircleAvatar(
-                  radius: height * 0.168,
-                  backgroundImage: NetworkImage(widget.UserProfile.image),
-                ),
+                child: widget.UserProfile.image == ""
+                    ? Neumorphic(
+                        child: CircleAvatar(
+                          radius: height * 0.16,
+                          backgroundColor: Colors.grey.shade300,
+                          child: NeumorphicIcon(
+                            Icons.tag_faces, size: textSize * 200, style: NeumorphicStyle(color: Colors.blue),
+                          ),
+                        ),
+                        style: NeumorphicStyle(
+                            boxShape: NeumorphicBoxShape.circle(),
+                            depth: -20,
+                            shadowLightColor:
+                                Color.fromARGB(255, 193, 217, 221),
+                            intensity: 1,
+                            border: NeumorphicBorder(
+                                color: Colors.grey.shade300,
+                                width: height * 0.01)))
+                    : CircleAvatar(
+                        radius: height * 0.16,
+                        backgroundImage: NetworkImage(widget.UserProfile.image),
+                      ),
               ),
               SizedBox(
                 height: height * 0.01,
@@ -60,7 +81,7 @@ class _DriveSafeHomePageState extends State<DriveSafeHomePage>
                     " " +
                     widget.UserProfile.lastName,
                 style: TextStyle(
-                  fontSize: textSize * 35,
+                  fontSize: textSize * 45,
                   fontFamily: "Nunito",
                   fontWeight: FontWeight.w800,
                   shadows: [
@@ -90,7 +111,7 @@ class _DriveSafeHomePageState extends State<DriveSafeHomePage>
                           height: height * 0.46 / 2,
                           child: NeumorphicButton(
                             onPressed: () {
-                              Navigator.pushNamed(context, "mainPage");
+                              Navigator.pushNamed(context, "FriendSreen");
                             },
                             child: Stack(
                               children: [

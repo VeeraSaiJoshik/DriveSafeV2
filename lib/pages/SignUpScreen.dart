@@ -202,16 +202,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       Text(
                         "Sign Up",
                         style: TextStyle(
-                          fontSize: textSize * 30,
+                          fontSize: textSize * 40,
                           fontFamily: "Nunito",
                           fontWeight: FontWeight.w700,
                           shadows: [
                             const Shadow(
-                                offset: Offset(3, 3),
+                                offset: Offset(2, 2),
                                 color: Colors.black38,
                                 blurRadius: 10),
                             Shadow(
-                                offset: Offset(-3, -3),
+                                offset: Offset(-2, -2),
                                 color: Colors.white.withOpacity(0.85),
                                 blurRadius: 10)
                           ],
@@ -370,7 +370,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 border: NeumorphicBorder(
                                   isEnabled: true,
                                   color: Colors.blue,
-                                  width: 2,
+                                  width: 4,
                                 ),
                                 shape: NeumorphicShape.flat,
                                 intensity: 0.9,
@@ -459,7 +459,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                           border: NeumorphicBorder(
                                             isEnabled: true,
                                             color: Colors.blue,
-                                            width: 2,
+                                            width: 3,
                                           )),
                                       max: 80,
                                       min: 1,
@@ -482,7 +482,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 style: NeumorphicStyle(
                                     color: mainColor,
                                     border: NeumorphicBorder(
-                                        color: Colors.blue, width: 2),
+                                        color: Colors.blue, width: 3),
                                     depth: -20,
                                     shape: NeumorphicShape.flat,
                                     boxShape: NeumorphicBoxShape.circle()),
@@ -569,7 +569,7 @@ class _NeumorphicTextFieldState extends State<NeumorphicTextField> {
                   const BorderRadius.all(Radius.circular(100))),
               depth: -15,
               color: Colors.grey.shade300,
-              border: NeumorphicBorder(color: Colors.blue, width: 2),
+              border: NeumorphicBorder(color: Colors.blue, width : 3),
               lightSource: LightSource.topLeft,
               shape: NeumorphicShape.concave),
         ),
@@ -643,7 +643,7 @@ class _NeumorphicTextFieldWithNumPadState
                   const BorderRadius.all(Radius.circular(100))),
               depth: -15,
               color: Colors.grey.shade300,
-              border: NeumorphicBorder(color: Colors.blue, width: 2),
+              border: NeumorphicBorder(color: Colors.black, width : 0),
               lightSource: LightSource.topLeft,
               shape: NeumorphicShape.concave),
         ),

@@ -12,18 +12,16 @@ List<String> searchPhoneNumbers(List<String> phoneNumber, String queryText) {
     int total = phoneNumber.length;
     tempList = [];
     tempList2 = [];
-    for (int k = 0; k < phoneNumber.length; k++) {
+    for (int k = 0; k < total; k++) {
       if (phoneNumber[k].substring(i, i + queryText.length) == queryText) {
         tempList.add(phoneNumber[k]);
+        phoneNumber.remove(phoneNumber[k]);
+        k--;
+        total--;
       }
     }
-    for (int l = 0; l < tempList.length; l++) {
-      phoneNumber.remove(tempList[l]);
-    }
     tempList.sort();
-    for (int temp = 0; temp < tempList.length; temp++) {
-      finalList.add(tempList[temp]);
-    }
+    finalList = finalList + tempList;
   }
   print(finalList);
   return finalList;

@@ -5,6 +5,8 @@ import 'package:drivesafev2/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'pages/SignUpLoadScreen.dart';
 import 'pages/LogInPage.dart';
+import 'pages/FriendsScreen.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -30,8 +32,8 @@ class MyApp extends StatelessWidget {
       routes: {
         "mainPage": ((context) => mainPage()),
         "SignUpPage": ((context) => SignUpScreen()),
-        "LogInPage" : ((context) =>  LogInScreen()),
-        
+        "LogInPage": ((context) => LogInScreen()),
+        "FriendSreen": ((context) => FriendScreen())
       },
     );
   }
