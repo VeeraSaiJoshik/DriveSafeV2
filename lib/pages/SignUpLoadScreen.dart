@@ -32,12 +32,17 @@ class SignUpLoadScreenState extends State<SignUpLoadScreen> {
           "age": widget.appUser.age,
           "firstName": widget.appUser.firstName,
           "lastName": widget.appUser.lastName,
-          "friendReqeusts": widget.appUser.friendRequests,
+          "friendReqeusts": [],
+          "friendRequestsPending": [],
           "image": finalUrl,
           "password": widget.appUser.password,
           "friends": widget.appUser.friends,
           "location": widget.appUser.location,
           "phoneNumber": widget.appUser.phoneNumber,
+          "locationSharingPeople": [],
+          "numberApproved": false,
+          "locationTrackingOn": false,
+          "phoneNumbersChosen": []
         }
       });
     });

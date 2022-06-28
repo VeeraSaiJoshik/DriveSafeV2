@@ -1,4 +1,7 @@
-List<String> searchPhoneNumbers(List<String> phoneNumber, String queryText) {
+List<String> searchPhoneNumbers(
+  List<String> phoneNumber,
+  String queryText,
+) {
   List<String> finalList = [];
   List<String> beginningList = [];
   for (int i = 0; i < phoneNumber.length; i++) {
@@ -8,14 +11,14 @@ List<String> searchPhoneNumbers(List<String> phoneNumber, String queryText) {
   }
   List<String> tempList = [];
   List<String> tempList2 = [];
+  tempList2.addAll(phoneNumber);
   for (int i = 0; i < 10 - queryText.length; i++) {
-    int total = phoneNumber.length;
+    int total = tempList2.length;
     tempList = [];
-    tempList2 = [];
     for (int k = 0; k < total; k++) {
-      if (phoneNumber[k].substring(i, i + queryText.length) == queryText) {
-        tempList.add(phoneNumber[k]);
-        phoneNumber.remove(phoneNumber[k]);
+      if (tempList2[k].substring(i, i + queryText.length) == queryText) {
+        tempList.add(tempList2[k]);
+        tempList2.remove(tempList2[k]);
         k--;
         total--;
       }
@@ -23,112 +26,39 @@ List<String> searchPhoneNumbers(List<String> phoneNumber, String queryText) {
     tempList.sort();
     finalList = finalList + tempList;
   }
-  print(finalList);
   return finalList;
 }
 
-void main() {
-  List<String> phoneNumberList = [
-    '8730232484',
-    '5765213265',
-    '2204655260',
-    '7618713247',
-    '2401864248',
-    '4856771854',
-    '4404686563',
-    '5511538602',
-    '2575368265',
-    '5680000506',
-    '6211871687',
-    '2416020612',
-    '4213315821',
-    '5681564575',
-    '0067068516',
-    '4385741025',
-    '1412815232',
-    '0417271647',
-    '0387527712',
-    '6806018665',
-    '2711028305',
-    '3442710061',
-    '8604125314',
-    '8780066837',
-    '2781404867',
-    '2410152464',
-    '1340033587',
-    '5100085012',
-    '3532000640',
-    '2178628581',
-    '7865066675',
-    '1060673675',
-    '7707787152',
-    '5406264514',
-    '7685877847',
-    '4380040587',
-    '4715463154',
-    '1052131736',
-    '2173875142',
-    '4011224708',
-    '4836508711',
-    '4761534636',
-    '8230350354',
-    '5050463032',
-    '7223041058',
-    '2211251470',
-    '8614677048',
-    '2158516252',
-    '5843052472',
-    '5152544181',
-    '5378487227',
-    '7452638313',
-    '0660666530',
-    '6405478033',
-    '1474872253',
-    '5283736784',
-    '3634757074',
-    '7206485641',
-    '5782504467',
-    '1803445184',
-    '8623858384',
-    '7833268616',
-    '6333448267',
-    '1540845554',
-    '5176751640',
-    '1682003863',
-    '1888338530',
-    '7410305486',
-    '3686101531',
-    '3361246460',
-    '3126017141',
-    '1571424251',
-    '5008353657',
-    '3150318234',
-    '6863475236',
-    '0180146565',
-    '1584834331',
-    '8054366051',
-    '5503754417',
-    '6644331062',
-    '6452057575',
-    '3407567883',
-    '6131874000',
-    '7623286578',
-    '5132673058',
-    '2225107434',
-    '3600512850',
-    '5757084358',
-    '2727808006',
-    '6884172586',
-    '5525204182',
-    '8575867533',
-    '0614736253',
-    '1302521875',
-    '3111273060',
-    '2364638032',
-    '6665600657',
-    '3836632213',
-    '6016337216',
-    '4622474255'
-  ];
-  searchPhoneNumbers(phoneNumberList, "0");
+List<int> searchNames(List<String> phoneNumber, String queryText, int Longest) {
+  List<String> finalList = [];
+  int highest = 0;
+  List<int> answer = [];
+  if (queryText == "") {
+    for (int i = 0; i < phoneNumber.length; i++) {
+      answer.add(i);
+    }
+    return answer;
+  } else {
+    List<String> tempList = [];
+    List<String> tempList2 = [];
+    tempList2.addAll(phoneNumber);
+    for (int i = 0; i < Longest - queryText.length; i++) {
+      int total = tempList2.length;
+      tempList = [];
+      for (int k = 0; k < total; k++) {
+        if (tempList2[k].substring(i, i + queryText.length) == queryText) {
+          tempList.add(tempList2[k]);
+          tempList2.remove(tempList2[k]);
+          k--;
+          total--;
+        }
+      }
+      tempList.sort();
+      finalList = finalList + tempList;
+    }
+  }
+  for (int i = 0; i < finalList.length; i++) {
+    answer.add(phoneNumber.indexOf(finalList[i]));
+  }
+  return answer;
 }

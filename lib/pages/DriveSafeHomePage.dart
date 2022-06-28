@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:drivesafev2/models/User.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:lottie/lottie.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_database/firebase_database.dart';
 
 class DriveSafeHomePage extends StatefulWidget {
   User UserProfile;
@@ -14,18 +16,91 @@ class DriveSafeHomePage extends StatefulWidget {
 
 // Main test case : 2670440300
 
-class _DriveSafeHomePageState extends State<DriveSafeHomePage>
-    with SingleTickerProviderStateMixin {
+class _DriveSafeHomePageState extends State<DriveSafeHomePage> {
   @override
   late final AnimationController controller;
+  Future<List<User>> getData() async {
+    List<User> allUserList = [];
+    final finalData = await FirebaseDatabase.instance.ref("User").get();
+    Map data = finalData.value as Map;
+    List friends;
+    List friendRequests;
+    List LocationSharingPeople;
+    List friendRequestsPending;
+    List location;
+    List numberList;
+    List chosenNumber;
+    data.forEach((key, value) {
+      if (data.containsKey("friends")) {
+        friends = data["friends"];
+      } else {
+        friends = [];
+      }
+      if (data.containsKey("friendReqeusts")) {
+        friendRequests = data["friendReqeusts"];
+      } else {
+        friendRequests = [];
+      }
+      if (data.containsKey("locationSharingPeople")) {
+        LocationSharingPeople = data["locationSharingPeople"];
+      } else {
+        LocationSharingPeople = [];
+      }
+      if (data.containsKey("friendRequestsPending")) {
+        friendRequestsPending = data["friendRequestsPending"];
+      } else {
+        friendRequestsPending = [];
+      }
+      if (data.containsKey("location")) {
+        location = data["location"];
+      } else {
+        location = [];
+      }
+      if (data.containsKey("phoneNumbersChosen")) {
+        numberList = data["phoneNumbersChosen"];
+      } else {
+        numberList = [];
+      }
+      if (data.containsKey("phoneNumbersChosen")) {
+        chosenNumber = data["phoneNumbersChosen"];
+      } else {
+        chosenNumber = [];
+      }
+      print(value);
+      try {
+        allUserList.add(User(
+          value["firstName"],
+          value["lastName"],
+          key,
+          value["password"],
+          value["age"],
+          friends,
+          friendRequests,
+          friendRequestsPending,
+          LocationSharingPeople,
+          location,
+          value["image"],
+          value["numberApproved"],
+          value["locationTrackingOn"],
+          chosenNumber,
+        ));
+      } catch (e) {
+        print(e);
+      }
+    });
+    return allUserList;
+  }
 
-  void inistState() {
-    controller =
-        AnimationController(vsync: this, duration: const Duration(seconds: 2));
+  late List<User> Allusers;
+  void initState() {
+    getData().then((users) {
+      setState(() {
+        Allusers = users;
+      });
+    });
     super.initState();
   }
 
-  void dispose() {}
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
@@ -40,7 +115,7 @@ class _DriveSafeHomePageState extends State<DriveSafeHomePage>
           child: Column(
             children: [
               SizedBox(
-                height: height * 0.03,
+                height: height * 0.06,
               ),
               Neumorphic(
                 style: NeumorphicStyle(
@@ -53,10 +128,12 @@ class _DriveSafeHomePageState extends State<DriveSafeHomePage>
                 child: widget.UserProfile.image == ""
                     ? Neumorphic(
                         child: CircleAvatar(
-                          radius: height * 0.16,
+                          radius: height * 0.15,
                           backgroundColor: Colors.grey.shade300,
                           child: NeumorphicIcon(
-                            Icons.tag_faces, size: textSize * 200, style: NeumorphicStyle(color: Colors.blue),
+                            Icons.tag_faces,
+                            size: textSize * 200,
+                            style: NeumorphicStyle(color: Colors.blue),
                           ),
                         ),
                         style: NeumorphicStyle(
@@ -111,7 +188,8 @@ class _DriveSafeHomePageState extends State<DriveSafeHomePage>
                           height: height * 0.46 / 2,
                           child: NeumorphicButton(
                             onPressed: () {
-                              Navigator.pushNamed(context, "FriendSreen");
+                              Navigator.pushNamed(context, "FriendSreen",
+                                  arguments: [widget.UserProfile , Allusers]);
                             },
                             child: Stack(
                               children: [
@@ -152,7 +230,11 @@ class _DriveSafeHomePageState extends State<DriveSafeHomePage>
                           width: width * (0.9 - 0.025) / 2,
                           height: height * 0.46 / 2,
                           child: NeumorphicButton(
-                            onPressed: () {},
+                            onPressed: () {
+                                 Navigator.of(context).pushNamed("mainPage");
+
+                          //    print(Allusers);
+                            },
                             child: Stack(
                               children: [
                                 Container(

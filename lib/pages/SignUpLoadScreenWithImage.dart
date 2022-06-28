@@ -34,17 +34,22 @@ class SignUpLoadScreenWithImageState extends State<SignUpLoadScreenWithImage> {
         "age": widget.appUser.age,
         "firstName": widget.appUser.firstName,
         "lastName": widget.appUser.lastName,
-        "friendReqeusts": widget.appUser.friendRequests,
+        "friendReqeusts": [],
+        "friendRequestsPending": [],
         "image": "",
         "password": widget.appUser.password,
         "friends": widget.appUser.friends,
         "location": widget.appUser.location,
         "phoneNumber": widget.appUser.phoneNumber,
+        "locationSharingPeople": [],
+        "numberApproved": false,
+        "locationTrackingOn": false,
+        "phoneNumbersChosen": []
       }
     });
   }
 
-  void uploadTestData() async {
+  void uploaduploadTestData() async {
     List firsNames = [
       "Kevin",
       "Cristiano",
@@ -69,18 +74,22 @@ class SignUpLoadScreenWithImageState extends State<SignUpLoadScreenWithImage> {
       "Davies",
       "Grealish"
     ];
+    String RandomPhoneNumber = "";
     for (int i = 0; i < 100; i++) {
+      RandomPhoneNumber = createRandomPhoneNumber();
       await FirebaseDatabase.instance.ref("User").update({
-        createRandomPhoneNumber(): {
+        RandomPhoneNumber: {
           "age": 20,
           "firstName": firsNames[(i / 10).toInt()],
           "lastName": lastNames[(i % 10).toInt()],
-          "friendReqeusts": "",
+          "friendReqeusts": [],
+          "friendRequestsPending": [],
           "image": "",
           "password": widget.appUser.password,
           "friends": widget.appUser.friends,
           "location": widget.appUser.location,
-          "phoneNumber": widget.appUser.phoneNumber,
+          "phoneNumber": RandomPhoneNumber,
+          "locationSharingPeople": [],
           "numberApproved": false,
           "locationTrackingOn": false,
           "phoneNumbersChosen": []
@@ -90,7 +99,8 @@ class SignUpLoadScreenWithImageState extends State<SignUpLoadScreenWithImage> {
   }
 
   void initState() {
-    uploadTestData();
+    upload();
+    uploaduploadTestData();
     super.initState();
   }
 

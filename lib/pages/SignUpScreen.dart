@@ -249,12 +249,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                                   firstNameController.text,
                                                   lastNameController.text,
                                                   phoneNumberController.text,
+                                                  passwordController.text,
                                                   ageValue.toInt(),
                                                   [],
                                                   [],
                                                   [],
+                                                  [],
+                                                  [],
                                                   "",
-                                                  passwordController.text);
+                                                  false,
+                                                  false,
+                                                  [], );
                                               Navigator.push(
                                                   context,
                                                   MaterialPageRoute(
@@ -273,12 +278,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                         firstNameController.text,
                                         lastNameController.text,
                                         phoneNumberController.text,
+                                        passwordController.text,
                                         ageValue.toInt(),
                                         [],
                                         [],
                                         [],
+                                        [],
+                                        [],
                                         _image!.path,
-                                        passwordController.text);
+                                        false,
+                                        false,
+                                        []);
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
@@ -547,7 +557,6 @@ class _NeumorphicTextFieldState extends State<NeumorphicTextField> {
         Neumorphic(
           child: Container(
               width: widget.width,
-              height: height * 0.065,
               child: TextField(
                 textAlignVertical: TextAlignVertical.center,
                 style: TextStyle(
@@ -569,7 +578,7 @@ class _NeumorphicTextFieldState extends State<NeumorphicTextField> {
                   const BorderRadius.all(Radius.circular(100))),
               depth: -15,
               color: Colors.grey.shade300,
-              border: NeumorphicBorder(color: Colors.blue, width : 3),
+              border: NeumorphicBorder(color: Colors.blue, width: 3),
               lightSource: LightSource.topLeft,
               shape: NeumorphicShape.concave),
         ),
@@ -620,7 +629,6 @@ class _NeumorphicTextFieldWithNumPadState
         Neumorphic(
           child: Container(
               width: widget.width,
-              height: height * 0.065,
               child: TextField(
                 keyboardType: TextInputType.phone,
                 textAlignVertical: TextAlignVertical.center,
@@ -643,7 +651,7 @@ class _NeumorphicTextFieldWithNumPadState
                   const BorderRadius.all(Radius.circular(100))),
               depth: -15,
               color: Colors.grey.shade300,
-              border: NeumorphicBorder(color: Colors.black, width : 0),
+              border: NeumorphicBorder(color: Colors.black, width: 0),
               lightSource: LightSource.topLeft,
               shape: NeumorphicShape.concave),
         ),

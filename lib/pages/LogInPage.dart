@@ -47,45 +47,102 @@ Future<errorDelivery> authorizeUser(String phoneNumber, String firstName,
     print(data["firstName"]);
     print(data["lastName"]);
     if (data["firstName"].toUpperCase() != firstName.toUpperCase()) {
+      print("this");
+      print(data["firstName"]);
       return errorDelivery(
           false,
-          "Name",
-          "We are sorry but the given name is not matching up with the phone number.",
-          User("", "", "", 0, [], [], [], "", ""));
+          data["firstName"],
+          "We are sorry but the given name is not matching up with the phone number.1",
+          User("", "", "", "", 0, [], [], [], [], [], "", false, false, []));
     } else if (data["lastName"].toUpperCase() != lastName.toUpperCase()) {
+      print("that");
       return errorDelivery(
           false,
           "Name",
-          "We are sorry but the given name is not matching up with the phone number.",
-          User("", "", "", 0, [], [], [], "", ""));
+          "We are sorry but the given name is not matching up with the phone number.2",
+          User("", "", "", "", 0, [], [], [], [], [], "", false, false, []));
     } else if (data["password"] != passWord) {
       return errorDelivery(
           false,
           "Password",
           "We are sorry but the given password is not correct.",
-          User("", "", "", 0, [], [], [], "", ""));
+          User("", "", "", "", 0, [], [], [], [], [], "", false, false, []));
     }
     print(data);
+    List friends;
+    List friendRequests;
+    List LocationSharingPeople;
+    List friendRequestsPending;
+    List location;
+    List numberList;
+    List chosenNumber;
+    if (data.containsKey("friends")) {
+      friends = data["friends"];
+    } else {
+      friends = [];
+    }
+    print("1");
+    if (data.containsKey("friendReqeusts")) {
+      friendRequests = data["friendReqeusts"];
+    } else {
+      friendRequests = [];
+    }
+    print("2");
+    if (data.containsKey("locationSharingPeople")) {
+      LocationSharingPeople = data["locationSharingPeople"];
+    } else {
+      LocationSharingPeople = [];
+    }
+    print("3");
+    if (data.containsKey("friendRequestsPending")) {
+      friendRequestsPending = data["friendRequestsPending"];
+    } else {
+      friendRequestsPending = [];
+    }
+    print("4");
+    if (data.containsKey("location")) {
+      location = data["location"];
+    } else {
+      location = [];
+    }
+    print("5");
+    if (data.containsKey("phoneNumbersChosen")) {
+      numberList = data["phoneNumbersChosen"];
+    } else {
+      numberList = [];
+    }
+    print("6");
+    if (data.containsKey("phoneNumbersChosen")) {
+      chosenNumber = data["phoneNumbersChosen"];
+    } else {
+      chosenNumber = [];
+    }
     return errorDelivery(
         true,
         "",
         "",
         User(
-            data["firstName"],
-            data["lastName"],
-            data["phoneNumber"].toString(),
-            data["age"],
-            [],
-            [],
-            [],
-            data["image"],
-            data["password"]));
+          data["firstName"],
+          data["lastName"],
+          data["phoneNumber"],
+          data["password"],
+          data["age"],
+          friends,
+          friendRequests,
+          friendRequestsPending,
+          LocationSharingPeople,
+          location,
+          data["image"],
+          data["numberApproved"],
+          data["locationTrackingOn"],
+          chosenNumber,
+        ));
   } else {
     return errorDelivery(
         false,
         "Phone Number",
         "The phone number could not be found.",
-        User("", "", "", 0, [], [], [], "", ""));
+        User("", "", "", "", 0, [], [], [], [], [], "", false, false, []));
   }
 }
 
@@ -141,7 +198,7 @@ class _LogInScreenState extends State<LogInScreen> {
                                     color: Colors.blue.shade500,
                                   ),
                                 ]),
-                            style:  NeumorphicStyle(
+                            style: NeumorphicStyle(
                                 boxShape: NeumorphicBoxShape.circle(),
                                 depth: 50,
                                 color: Colors.grey.shade300,
@@ -151,7 +208,7 @@ class _LogInScreenState extends State<LogInScreen> {
                       Text(
                         "Log In",
                         style: TextStyle(
-                          fontSize: textSize * 30,
+                          fontSize: textSize * 0,
                           fontFamily: "Nunito",
                           fontWeight: FontWeight.w700,
                           shadows: [
@@ -246,7 +303,7 @@ class _LogInScreenState extends State<LogInScreen> {
                                     const BorderRadius.all(
                                         Radius.circular(100))),
                                 depth: 50,
-                                color:  Colors.grey.shade300,
+                                color: Colors.grey.shade300,
                                 lightSource: LightSource.topLeft,
                                 shape: NeumorphicShape.concave)),
                       ),
@@ -357,7 +414,6 @@ class _NeumorphicTextFieldState extends State<NeumorphicTextField> {
         Neumorphic(
           child: Container(
               width: widget.width,
-              height: height * 0.065,
               child: TextField(
                 textAlignVertical: TextAlignVertical.center,
                 style: TextStyle(

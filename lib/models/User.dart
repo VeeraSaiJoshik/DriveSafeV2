@@ -8,20 +8,27 @@ class User {
   int age;
   List friends;
   List friendRequests;
+  List LocationSharingPeople;
+  List friendRequestsPending;
   List location;
   String image;
-  /* bool numberApproved;
+  bool numberApproved;
   bool locationTrackingOn;
-  List numberList;*/
-
+  List numberList;
   User(
       this.firstName,
       this.lastName,
       this.phoneNumber,
+      this.password,
       this.age,
-      this.friendRequests,
       this.friends,
+      this.friendRequests,
+      this.friendRequestsPending,
+      this.LocationSharingPeople,
       this.location,
       this.image,
-      this.password);
+      this.numberApproved,
+      this.locationTrackingOn,
+      this.numberList,
+      );
 }
