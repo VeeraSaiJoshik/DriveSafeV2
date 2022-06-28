@@ -2,6 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'searchPeople.dart';
+import 'AcceptFriendScreen.dart';
+import 'PhoneNumber.dart';
+import 'MainFriendScreen.dart';
 import 'package:drivesafev2/models/User.dart';
 
 class FriendScreen extends StatefulWidget {
@@ -12,6 +15,7 @@ class FriendScreen extends StatefulWidget {
 }
 
 class _FriendScreenState extends State<FriendScreen> {
+  int index = 3;
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
@@ -20,13 +24,15 @@ class _FriendScreenState extends State<FriendScreen> {
     double textSize = MediaQuery.of(context).textScaleFactor;
     Color mainColor = Colors.grey.shade300;
     TextEditingController textEditingController = TextEditingController();
-    int index = 0;
     List passOverData = ModalRoute.of(context)!.settings.arguments as List;
     User currentUser = passOverData[0];
     List<User> allUsers = passOverData[1];
     List<Widget> pageList = [
-      searchPeople(
-          height - 60, width, textEditingController, textSize, currentUser, allUsers)
+      MainFriendScreen(),
+      PhoneNumberScreen(),
+      searchPeople(height - 60, width, textEditingController, textSize,
+          currentUser, allUsers),
+      FriendsScreen(),
     ];
     return Container(
       color: Colors.blue,
@@ -49,15 +55,22 @@ class _FriendScreenState extends State<FriendScreen> {
                   color: mainColor,
                 ),
                 Icon(
+                  Icons.person_search,
+                  size: textSize * 40,
+                  color: mainColor,
+                ),
+                Icon(
                   Icons.person_add,
                   size: textSize * 40,
                   color: mainColor,
                 ),
               ],
-              onTap: (number) => setState(() {
+              onTap: (number) {
                 index = number;
-              }),
-              index: index,
+                setState(() {
+                  index;
+                });
+              },
               color: Colors.blue,
               height: 60,
               backgroundColor: mainColor,

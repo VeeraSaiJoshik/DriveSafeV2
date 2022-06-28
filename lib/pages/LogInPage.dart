@@ -69,54 +69,40 @@ Future<errorDelivery> authorizeUser(String phoneNumber, String firstName,
           User("", "", "", "", 0, [], [], [], [], [], "", false, false, []));
     }
     print(data);
-    List friends;
-    List friendRequests;
-    List LocationSharingPeople;
-    List friendRequestsPending;
-    List location;
-    List numberList;
-    List chosenNumber;
+    List friends = [];
+    List friendRequests = [];
+    List LocationSharingPeople = [];
+    List friendRequestsPending = [];
+    List location = [];
+    List numberList = [];
+    List chosenNumber = [];
     if (data.containsKey("friends")) {
       friends = data["friends"];
-    } else {
-      friends = [];
-    }
+    } 
     print("1");
     if (data.containsKey("friendReqeusts")) {
-      friendRequests = data["friendReqeusts"];
-    } else {
-      friendRequests = [];
-    }
+      friendRequests.addAll(data["friendReqeusts"]);
+    } 
     print("2");
     if (data.containsKey("locationSharingPeople")) {
-      LocationSharingPeople = data["locationSharingPeople"];
-    } else {
-      LocationSharingPeople = [];
-    }
+      LocationSharingPeople.addAll(data["locationSharingPeople"]);
+    } 
     print("3");
     if (data.containsKey("friendRequestsPending")) {
-      friendRequestsPending = data["friendRequestsPending"];
-    } else {
-      friendRequestsPending = [];
-    }
+      friendRequestsPending.addAll(data["friendRequestsPending"]);
+    } 
     print("4");
     if (data.containsKey("location")) {
-      location = data["location"];
-    } else {
-      location = [];
+      location.addAll(["location"]);
     }
     print("5");
     if (data.containsKey("phoneNumbersChosen")) {
-      numberList = data["phoneNumbersChosen"];
-    } else {
-      numberList = [];
-    }
+      numberList.addAll(["phoneNumbersChosen"]);
+    } 
     print("6");
     if (data.containsKey("phoneNumbersChosen")) {
-      chosenNumber = data["phoneNumbersChosen"];
-    } else {
-      chosenNumber = [];
-    }
+      chosenNumber.addAll(data["phoneNumbersChosen"]);
+    } 
     return errorDelivery(
         true,
         "",

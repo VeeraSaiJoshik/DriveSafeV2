@@ -5,7 +5,7 @@ import 'package:drivesafev2/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'pages/SignUpLoadScreen.dart';
 import 'pages/LogInPage.dart';
-import 'pages/FriendsScreen.dart';
+import 'pages/ContactsScreen/FriendsScreen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
