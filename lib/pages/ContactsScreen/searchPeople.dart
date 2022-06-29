@@ -28,9 +28,9 @@ class _searchPeopleState extends State<searchPeople> {
   late List<String> tempList2 = [];
   List<String> friendsList = [];
   List<String> requestList = [];
-  late User currentUser;
+  late User currentUser = User(" ", " ", " ", " ", 0, [], [], [], [], [], "", false, false, []);
   late List<User> allusers = [];
-
+  bool flag = false;
   Future<User> getUserData(String phoneNumber) async {
     phoneNumber = phoneNumber.trim();
     phoneNumber = phoneNumber.replaceAll(" ", "");
@@ -146,31 +146,26 @@ class _searchPeopleState extends State<searchPeople> {
     await getData().then((users) {
       setState(() {
         allusers.addAll(users);
-         print("this is allusers");
-    print(allusers);
-    print(allusers.length);
-    for (int i = 0; i < allusers.length; i++) {
-      allDisplayNames.add(allusers[i].firstName + " " + allusers[i].lastName);
-      print("here dawg");
-    }
-    print("this is all displace names");
-    print(allDisplayNames);
-    tempList2.addAll(allDisplayNames);
-    for (int k = 0; k < tempList2.length; k++) {
-      if (tempList2[k].length > highest) {
-        highest = tempList2[k].length;
-      }
-    }
-    for (int k = 0; k < tempList2.length; k++) {
-      for (int spaceI = tempList2[k].length; spaceI < highest; spaceI++) {
-        tempList2[k] = tempList2[k] + " ";
-      }
-    }
+        for (int i = 0; i < allusers.length; i++) {
+          allDisplayNames
+              .add(allusers[i].firstName + " " + allusers[i].lastName);
+        }
+        tempList2.addAll(allDisplayNames);
+        for (int k = 0; k < tempList2.length; k++) {
+          if (tempList2[k].length > highest) {
+            highest = tempList2[k].length;
+          }
+        }
+        for (int k = 0; k < tempList2.length; k++) {
+          for (int spaceI = tempList2[k].length; spaceI < highest; spaceI++) {
+            tempList2[k] = tempList2[k] + " ";
+          }
+        }
       });
-      print(allusers);
     });
-    print("here");
-    print(allusers);
+    for (int i = 0; i < allusers.length; i++) {
+      answer.add(i);
+    }
     await getUserData(widget.currentUser.phoneNumber).then((value) {
       setState(() {
         currentUser = value;
@@ -180,7 +175,7 @@ class _searchPeopleState extends State<searchPeople> {
 
   void initState() {
     collectData();
-   
+
     super.initState();
   }
 
@@ -210,13 +205,12 @@ class _searchPeopleState extends State<searchPeople> {
                             color: Colors.blue),
                         textAlign: TextAlign.center,
                         onChanged: (text) {
-                          print(allusers);
                           List<String> dummy = allDisplayNames;
+                          flag = true;
                           setState(() {
-                            answer = searchNames(tempList2, text, highest);
+                            answer =
+                                searchNames(tempList2, text, highest, flag);
                           });
-                          print("why");
-                          print(answer);
                         },
                         decoration: InputDecoration(
                             prefixIcon: Padding(
@@ -283,7 +277,6 @@ class _searchPeopleState extends State<searchPeople> {
 
                         // giant code
                         Color finalColor = Colors.blue;
-                        print("here");
                         bool flag = true;
                         for (int i = 0;
                             i < appUser.friendRequests.length;
@@ -313,8 +306,6 @@ class _searchPeopleState extends State<searchPeople> {
                             //   color: Colors.black,
                             child: InkWell(
                               onDoubleTap: () async {
-                                print(appUser.phoneNumber);
-                                print(["pending", user.phoneNumber]);
                                 bool flag = true;
                                 for (int i = 0;
                                     i < appUser.friendRequests.length;
@@ -325,7 +316,6 @@ class _searchPeopleState extends State<searchPeople> {
                                     break;
                                   }
                                 }
-                                print(flag);
                                 if (user.phoneNumber == appUser.phoneNumber) {
                                   AwesomeDialog(
                                     context: context,
@@ -372,7 +362,6 @@ class _searchPeopleState extends State<searchPeople> {
                                     btnOkText: "Ok",
                                     btnOkColor: Colors.red,
                                   ).show();
-                                  print("it is already here");
                                 } else {
                                   AwesomeDialog(
                                           context: context,

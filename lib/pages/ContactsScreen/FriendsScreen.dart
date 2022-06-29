@@ -24,6 +24,7 @@ class _FriendScreenState extends State<FriendScreen> {
     double textSize = MediaQuery.of(context).textScaleFactor;
     Color mainColor = Colors.grey.shade300;
     TextEditingController textEditingController = TextEditingController();
+    TextEditingController textEditingController2 = TextEditingController();
     List passOverData = ModalRoute.of(context)!.settings.arguments as List;
     User currentUser = passOverData[0];
     List<User> allUsers = passOverData[1];
@@ -32,7 +33,8 @@ class _FriendScreenState extends State<FriendScreen> {
       PhoneNumberScreen(),
       searchPeople(height - 60, width, textEditingController, textSize,
           currentUser),
-      FriendsScreen(),
+      FriendsScreen(height -60, width,textEditingController2, textSize,
+          currentUser),
     ];
     return Container(
       color: Colors.blue,

@@ -29,11 +29,11 @@ List<String> searchPhoneNumbers(
   return finalList;
 }
 
-List<int> searchNames(List<String> phoneNumber, String queryText, int Longest) {
+List<int> searchNames(List<String> phoneNumber, String queryText, int Longest, bool haveAlreadyInitiated) {
   List<String> finalList = [];
   int highest = 0;
   List<int> answer = [];
-  if (queryText == "") {
+  if (queryText == "" || !(haveAlreadyInitiated)) {
     for (int i = 0; i < phoneNumber.length; i++) {
       answer.add(i);
     }
