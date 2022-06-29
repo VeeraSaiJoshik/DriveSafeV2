@@ -19,52 +19,46 @@ class DriveSafeHomePage extends StatefulWidget {
 class _DriveSafeHomePageState extends State<DriveSafeHomePage> {
   @override
   late final AnimationController controller;
+ 
+
   Future<List<User>> getData() async {
     List<User> allUserList = [];
     final finalData = await FirebaseDatabase.instance.ref("User").get();
     Map data = finalData.value as Map;
-    List friends;
-    List friendRequests;
-    List LocationSharingPeople;
-    List friendRequestsPending;
-    List location;
-    List numberList;
-    List chosenNumber;
+    List friends = [];
+    List friendRequests = [];
+    List LocationSharingPeople = [];
+    List friendRequestsPending = [];
+    List location = [];
+    List numberList = [];
+    List chosenNumber = [];
     data.forEach((key, value) {
       if (data.containsKey("friends")) {
         friends = data["friends"];
-      } else {
-        friends = [];
       }
+      print("1");
       if (data.containsKey("friendReqeusts")) {
-        friendRequests = data["friendReqeusts"];
-      } else {
-        friendRequests = [];
+        friendRequests.addAll(data["friendReqeusts"]);
       }
+      print("2");
       if (data.containsKey("locationSharingPeople")) {
-        LocationSharingPeople = data["locationSharingPeople"];
-      } else {
-        LocationSharingPeople = [];
+        LocationSharingPeople.addAll(data["locationSharingPeople"]);
       }
+      print("3");
       if (data.containsKey("friendRequestsPending")) {
-        friendRequestsPending = data["friendRequestsPending"];
-      } else {
-        friendRequestsPending = [];
+        friendRequestsPending.addAll(data["friendRequestsPending"]);
       }
+      print("4");
       if (data.containsKey("location")) {
-        location = data["location"];
-      } else {
-        location = [];
+        location.addAll(["location"]);
       }
+      print("5");
       if (data.containsKey("phoneNumbersChosen")) {
-        numberList = data["phoneNumbersChosen"];
-      } else {
-        numberList = [];
+        numberList.addAll(["phoneNumbersChosen"]);
       }
+      print("6");
       if (data.containsKey("phoneNumbersChosen")) {
-        chosenNumber = data["phoneNumbersChosen"];
-      } else {
-        chosenNumber = [];
+        chosenNumber.addAll(data["phoneNumbersChosen"]);
       }
       print(value);
       try {
@@ -189,7 +183,7 @@ class _DriveSafeHomePageState extends State<DriveSafeHomePage> {
                           child: NeumorphicButton(
                             onPressed: () {
                               Navigator.pushNamed(context, "FriendSreen",
-                                  arguments: [widget.UserProfile , Allusers]);
+                                  arguments: [widget.UserProfile, Allusers]);
                             },
                             child: Stack(
                               children: [
@@ -231,9 +225,9 @@ class _DriveSafeHomePageState extends State<DriveSafeHomePage> {
                           height: height * 0.46 / 2,
                           child: NeumorphicButton(
                             onPressed: () {
-                                 Navigator.of(context).pushNamed("mainPage");
+                              Navigator.of(context).pushNamed("mainPage");
 
-                          //    print(Allusers);
+                              //    print(Allusers);
                             },
                             child: Stack(
                               children: [

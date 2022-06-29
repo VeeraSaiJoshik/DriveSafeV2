@@ -1,4 +1,3 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
@@ -6,6 +5,7 @@ import 'package:drivesafev2/python/searchAlgorithm.dart';
 import 'package:drivesafev2/models/User.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:awesome_dialog/awesome_dialog.dart';
 
 class searchPeople extends StatefulWidget {
   double height;
@@ -13,9 +13,8 @@ class searchPeople extends StatefulWidget {
   var textSize;
   TextEditingController textEditingController;
   User currentUser;
-  List<User> allUser;
   searchPeople(this.height, this.width, this.textEditingController,
-      this.textSize, this.currentUser, this.allUser);
+      this.textSize, this.currentUser);
 
   @override
   _searchPeopleState createState() => _searchPeopleState();
@@ -29,11 +28,133 @@ class _searchPeopleState extends State<searchPeople> {
   late List<String> tempList2 = [];
   List<String> friendsList = [];
   List<String> requestList = [];
-  void initState() {
-    for (int i = 0; i < widget.allUser.length; i++) {
-      allDisplayNames
-          .add(widget.allUser[i].firstName + " " + widget.allUser[i].lastName);
+  late User currentUser;
+  late List<User> allusers = [];
+
+  Future<User> getUserData(String phoneNumber) async {
+    phoneNumber = phoneNumber.trim();
+    phoneNumber = phoneNumber.replaceAll(" ", "");
+    if (phoneNumber[0] != "+") {
+      phoneNumber = "+1" + phoneNumber;
     }
+    final Data =
+        await FirebaseDatabase.instance.ref("User/" + phoneNumber).get();
+    Map data = Data.value as Map;
+    List friends = [];
+    List friendRequests = [];
+    List LocationSharingPeople = [];
+    List friendRequestsPending = [];
+    List location = [];
+    List numberList = [];
+    List chosenNumber = [];
+    if (data.containsKey("friends")) {
+      friends = data["friends"];
+    }
+    if (data.containsKey("friendReqeusts")) {
+      friendRequests.addAll(data["friendReqeusts"]);
+    }
+    if (data.containsKey("locationSharingPeople")) {
+      LocationSharingPeople.addAll(data["locationSharingPeople"]);
+    }
+    if (data.containsKey("friendRequestsPending")) {
+      friendRequestsPending.addAll(data["friendRequestsPending"]);
+    }
+    if (data.containsKey("location")) {
+      location.addAll(["location"]);
+    }
+    if (data.containsKey("phoneNumbersChosen")) {
+      numberList.addAll(["phoneNumbersChosen"]);
+    }
+    if (data.containsKey("phoneNumbersChosen")) {
+      chosenNumber.addAll(data["phoneNumbersChosen"]);
+    }
+    return User(
+      data["firstName"],
+      data["lastName"],
+      data["phoneNumber"],
+      data["password"],
+      data["age"],
+      friends,
+      friendRequests,
+      friendRequestsPending,
+      LocationSharingPeople,
+      location,
+      data["image"],
+      data["numberApproved"],
+      data["locationTrackingOn"],
+      chosenNumber,
+    );
+  }
+
+  Future<List<User>> getData() async {
+    List<User> allUserList = [];
+    final finalData = await FirebaseDatabase.instance.ref("User").get();
+    Map data = finalData.value as Map;
+
+    List friends = [];
+    List friendRequests = [];
+    List LocationSharingPeople = [];
+    List friendRequestsPending = [];
+    List location = [];
+    List numberList = [];
+    List chosenNumber = [];
+    data.forEach((key, value) {
+      if (data.containsKey("friends")) {
+        friends = data["friends"];
+      }
+      if (data.containsKey("friendReqeusts")) {
+        friendRequests.addAll(data["friendReqeusts"]);
+      }
+      if (data.containsKey("locationSharingPeople")) {
+        LocationSharingPeople.addAll(data["locationSharingPeople"]);
+      }
+      if (data.containsKey("friendRequestsPending")) {
+        friendRequestsPending.addAll(data["friendRequestsPending"]);
+      }
+      if (data.containsKey("location")) {
+        location.addAll(["location"]);
+      }
+      if (data.containsKey("phoneNumbersChosen")) {
+        numberList.addAll(["phoneNumbersChosen"]);
+      }
+      if (data.containsKey("phoneNumbersChosen")) {
+        chosenNumber.addAll(data["phoneNumbersChosen"]);
+      }
+      try {
+        allUserList.add(User(
+          value["firstName"],
+          value["lastName"],
+          key,
+          value["password"],
+          value["age"],
+          friends,
+          friendRequests,
+          friendRequestsPending,
+          LocationSharingPeople,
+          location,
+          value["image"],
+          value["numberApproved"],
+          value["locationTrackingOn"],
+          chosenNumber,
+        ));
+      } catch (e) {}
+    });
+    return allUserList;
+  }
+
+  void collectData() async {
+    await getData().then((users) {
+      setState(() {
+        allusers.addAll(users);
+         print("this is allusers");
+    print(allusers);
+    print(allusers.length);
+    for (int i = 0; i < allusers.length; i++) {
+      allDisplayNames.add(allusers[i].firstName + " " + allusers[i].lastName);
+      print("here dawg");
+    }
+    print("this is all displace names");
+    print(allDisplayNames);
     tempList2.addAll(allDisplayNames);
     for (int k = 0; k < tempList2.length; k++) {
       if (tempList2[k].length > highest) {
@@ -45,10 +166,26 @@ class _searchPeopleState extends State<searchPeople> {
         tempList2[k] = tempList2[k] + " ";
       }
     }
+      });
+      print(allusers);
+    });
+    print("here");
+    print(allusers);
+    await getUserData(widget.currentUser.phoneNumber).then((value) {
+      setState(() {
+        currentUser = value;
+      });
+    });
+  }
+
+  void initState() {
+    collectData();
+   
     super.initState();
   }
 
   Widget build(BuildContext context) {
+    double textSize = MediaQuery.of(context).textScaleFactor;
     return Center(
       child: Container(
         height: widget.height,
@@ -73,7 +210,7 @@ class _searchPeopleState extends State<searchPeople> {
                             color: Colors.blue),
                         textAlign: TextAlign.center,
                         onChanged: (text) {
-                          print(allDisplayNames);
+                          print(allusers);
                           List<String> dummy = allDisplayNames;
                           setState(() {
                             answer = searchNames(tempList2, text, highest);
@@ -140,8 +277,8 @@ class _searchPeopleState extends State<searchPeople> {
                     children: [
                       ...answer.map((userArea) {
                         double height = widget.height;
-                        User user = widget.allUser[userArea];
-                        User appUser = widget.currentUser;
+                        User user = allusers[userArea];
+                        User appUser = currentUser;
                         List<String> awaitList = requestList;
 
                         // giant code
@@ -158,7 +295,7 @@ class _searchPeopleState extends State<searchPeople> {
                           }
                         }
                         if (widget.currentUser.friends
-                            .contains(widget.allUser[userArea])) {
+                            .contains(allusers[userArea])) {
                           finalColor = Colors.greenAccent;
                         } else if (!flag) {
                           finalColor = Colors.orange;
@@ -190,37 +327,141 @@ class _searchPeopleState extends State<searchPeople> {
                                 }
                                 print(flag);
                                 if (user.phoneNumber == appUser.phoneNumber) {
-                                  print("dumbass");
+                                  AwesomeDialog(
+                                    context: context,
+                                    dialogType: DialogType.ERROR,
+                                    animType: AnimType.SCALE,
+                                    headerAnimationLoop: false,
+                                    title: "ERROR",
+                                    desc:
+                                        "You cannot send a contact-request to yourself",
+                                    titleTextStyle: TextStyle(
+                                      fontWeight: FontWeight.w700,
+                                      fontFamily: "Nunito",
+                                      fontSize: textSize * 25,
+                                      color: Colors.red,
+                                    ),
+                                    descTextStyle: TextStyle(
+                                        fontFamily: "Nunito",
+                                        fontSize: textSize * 20,
+                                        color: Colors.red),
+                                    btnOkOnPress: () {},
+                                    btnOkText: "Ok",
+                                    btnOkColor: Colors.red,
+                                  ).show();
                                 } else if (flag == false) {
+                                  AwesomeDialog(
+                                    context: context,
+                                    dialogType: DialogType.ERROR,
+                                    animType: AnimType.SCALE,
+                                    headerAnimationLoop: false,
+                                    title: "ERROR",
+                                    desc:
+                                        "You have already sent a friend request to the person. The request is currently pending.",
+                                    titleTextStyle: TextStyle(
+                                      fontWeight: FontWeight.w700,
+                                      fontFamily: "Nunito",
+                                      fontSize: textSize * 25,
+                                      color: Colors.red,
+                                    ),
+                                    descTextStyle: TextStyle(
+                                        fontFamily: "Nunito",
+                                        fontSize: textSize * 20,
+                                        color: Colors.red),
+                                    btnOkOnPress: () {},
+                                    btnOkText: "Ok",
+                                    btnOkColor: Colors.red,
+                                  ).show();
                                   print("it is already here");
                                 } else {
-                                  setState(() {
-                                    appUser.friendRequests
-                                        .add(["pending", user.phoneNumber]);
-                                    answer = answer;
-                                  });
-                                  await FirebaseDatabase.instance
-                                      .ref("User")
-                                      .update({
-                                    appUser.phoneNumber: {
-                                      "age": appUser.age,
-                                      "firstName": appUser.firstName,
-                                      "lastName": appUser.lastName,
-                                      "friendReqeusts": appUser.friendRequests,
-                                      "friendRequestsPending":
-                                          appUser.friendRequestsPending,
-                                      "image": appUser.image,
-                                      "password": appUser.password,
-                                      "friends": appUser.friends,
-                                      "location": appUser.location,
-                                      "phoneNumber": appUser.phoneNumber,
-                                      "locationSharingPeople":
-                                          appUser.LocationSharingPeople,
-                                      "numberApproved": false,
-                                      "locationTrackingOn": false,
-                                      "phoneNumbersChosen": []
-                                    }
-                                  });
+                                  AwesomeDialog(
+                                          context: context,
+                                          dialogType: DialogType.INFO,
+                                          animType: AnimType.SCALE,
+                                          headerAnimationLoop: false,
+                                          title: "Warning",
+                                          desc:
+                                              "Are you sure you want to send a friend request to " +
+                                                  allusers[userArea].firstName +
+                                                  " " +
+                                                  allusers[userArea].lastName,
+                                          titleTextStyle: TextStyle(
+                                            fontWeight: FontWeight.w700,
+                                            fontFamily: "Nunito",
+                                            fontSize: textSize * 25,
+                                            color: Colors.blue,
+                                          ),
+                                          descTextStyle: TextStyle(
+                                              fontFamily: "Nunito",
+                                              fontSize: textSize * 20,
+                                              color: Colors.blueAccent),
+                                          btnOkOnPress: () async {
+                                            setState(() {
+                                              appUser.friendRequests.add([
+                                                "pending",
+                                                user.phoneNumber
+                                              ]);
+                                              answer = answer;
+                                            });
+                                            await FirebaseDatabase.instance
+                                                .ref("User")
+                                                .update({
+                                              appUser.phoneNumber: {
+                                                "age": appUser.age,
+                                                "firstName": appUser.firstName,
+                                                "lastName": appUser.lastName,
+                                                "friendReqeusts":
+                                                    appUser.friendRequests,
+                                                "friendRequestsPending": appUser
+                                                    .friendRequestsPending,
+                                                "image": appUser.image,
+                                                "password": appUser.password,
+                                                "friends": appUser.friends,
+                                                "location": appUser.location,
+                                                "phoneNumber":
+                                                    appUser.phoneNumber,
+                                                "locationSharingPeople": appUser
+                                                    .LocationSharingPeople,
+                                                "numberApproved": false,
+                                                "locationTrackingOn": false,
+                                                "phoneNumbersChosen": []
+                                              }
+                                            });
+                                            List tempFriendList = [];
+                                            tempFriendList.addAll(
+                                                user.friendRequestsPending);
+                                            tempFriendList
+                                                .add(appUser.phoneNumber);
+                                            await FirebaseDatabase.instance
+                                                .ref("User")
+                                                .update({
+                                              user.phoneNumber: {
+                                                "age": user.age,
+                                                "firstName": user.firstName,
+                                                "lastName": user.lastName,
+                                                "friendReqeusts":
+                                                    user.friendRequests,
+                                                "friendRequestsPending":
+                                                    tempFriendList,
+                                                "image": user.image,
+                                                "password": user.password,
+                                                "friends": user.friends,
+                                                "location": user.location,
+                                                "phoneNumber": user.phoneNumber,
+                                                "locationSharingPeople":
+                                                    user.LocationSharingPeople,
+                                                "numberApproved": false,
+                                                "locationTrackingOn": false,
+                                                "phoneNumbersChosen": []
+                                              }
+                                            });
+                                          },
+                                          btnOkText: "Yes",
+                                          btnOkColor: Colors.green,
+                                          btnCancelText: "No",
+                                          btnCancelColor: Colors.red,
+                                          btnCancelOnPress: () {})
+                                      .show();
                                 }
                               },
                               child: Neumorphic(
@@ -313,144 +554,5 @@ class _searchPeopleState extends State<searchPeople> {
         ]),
       ),
     );
-  }
-}
-
-class searchChildWidget extends StatefulWidget {
-  double height;
-  User user;
-  Color color;
-  User appUser;
-  List<String> awaitList;
-  var answer;
-  searchChildWidget(this.height, this.user, this.color, this.appUser,
-      this.awaitList, this.answer);
-  @override
-  _searchChildWidgetState createState() => _searchChildWidgetState();
-}
-
-class _searchChildWidgetState extends State<searchChildWidget> {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-        width: MediaQuery.of(context).size.width * 0.95,
-        height: widget.height * 0.15,
-        margin: EdgeInsets.only(
-            left: MediaQuery.of(context).size.width * 0.025,
-            right: MediaQuery.of(context).size.width * 0.025,
-            bottom: widget.height * 0.02),
-        //   color: Colors.black,
-        child: InkWell(
-          onDoubleTap: () async {
-            print(widget.appUser.phoneNumber);
-            print(["pending", widget.user.phoneNumber]);
-            bool flag = true;
-            for (int i = 0; i < widget.appUser.friendRequests.length; i++) {
-              if (widget.user.phoneNumber ==
-                  widget.appUser.friendRequests[i][1]) {
-                flag = false;
-                break;
-              }
-            }
-            print(flag);
-            if (widget.user.phoneNumber == widget.appUser.phoneNumber) {
-              print("dumbass");
-            } else if (flag == false) {
-              print("it is already here");
-            } else {
-              setState(() {
-                widget.appUser.friendRequests
-                    .add(["pending", widget.user.phoneNumber]);
-                widget.answer = widget.answer;
-              });
-              await FirebaseDatabase.instance.ref("User").update({
-                widget.appUser.phoneNumber: {
-                  "age": widget.appUser.age,
-                  "firstName": widget.appUser.firstName,
-                  "lastName": widget.appUser.lastName,
-                  "friendReqeusts": widget.appUser.friendRequests,
-                  "friendRequestsPending": widget.appUser.friendRequestsPending,
-                  "image": widget.appUser.image,
-                  "password": widget.appUser.password,
-                  "friends": widget.appUser.friends,
-                  "location": widget.appUser.location,
-                  "phoneNumber": widget.appUser.phoneNumber,
-                  "locationSharingPeople": widget.appUser.LocationSharingPeople,
-                  "numberApproved": false,
-                  "locationTrackingOn": false,
-                  "phoneNumbersChosen": []
-                }
-              });
-            }
-          },
-          child: Neumorphic(
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.05,
-                ),
-                Neumorphic(
-                  style: NeumorphicStyle(
-                      boxShape: NeumorphicBoxShape.circle(),
-                      depth: -15,
-                      color: Colors.grey.shade300,
-                      lightSource: LightSource.topLeft,
-                      border: NeumorphicBorder(color: widget.color, width: 5),
-                      shape: NeumorphicShape.concave),
-                  child: Container(
-                      height: widget.height * 0.11,
-                      width: widget.height * 0.11,
-                      decoration: const BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(100)),
-                      )),
-                ),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.02,
-                ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      widget.user.phoneNumber,
-                      style: TextStyle(
-                          fontWeight: FontWeight.w700,
-                          color: widget.color,
-                          fontSize:
-                              MediaQuery.of(context).textScaleFactor * 25),
-                    ),
-                    SizedBox(
-                      height: widget.height * 0.01,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Text(
-                          widget.user.firstName + " " + widget.user.lastName,
-                          textAlign: TextAlign.left,
-                          style: TextStyle(
-                              fontWeight: FontWeight.w700,
-                              color: widget.color,
-                              fontSize:
-                                  MediaQuery.of(context).textScaleFactor * 20),
-                        ),
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.08,
-                        )
-                      ],
-                    ),
-                  ],
-                )
-              ],
-            ),
-            style: NeumorphicStyle(
-                boxShape: NeumorphicBoxShape.roundRect(
-                    const BorderRadius.all(Radius.circular(45))),
-                depth: 15,
-                color: Colors.grey.shade300,
-                lightSource: LightSource.topLeft,
-                shape: NeumorphicShape.concave),
-          ),
-        ));
   }
 }

@@ -31,7 +31,7 @@ class _FriendScreenState extends State<FriendScreen> {
       MainFriendScreen(),
       PhoneNumberScreen(),
       searchPeople(height - 60, width, textEditingController, textSize,
-          currentUser, allUsers),
+          currentUser),
       FriendsScreen(),
     ];
     return Container(
