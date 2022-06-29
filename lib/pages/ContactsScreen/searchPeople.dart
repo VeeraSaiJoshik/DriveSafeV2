@@ -28,7 +28,15 @@ class _searchPeopleState extends State<searchPeople> {
   late List<String> tempList2 = [];
   List<String> friendsList = [];
   List<String> requestList = [];
-  late User currentUser = User(" ", " ", " ", " ", 0, [], [], [], [], [], "", false, false, []);
+  List friends = [];
+  List friendRequests = [];
+  List LocationSharingPeople = [];
+  List friendRequestsPending = [];
+  List location = [];
+  List numberList = [];
+  List chosenNumber = [];
+  late User currentUser =
+      User(" ", " ", " ", " ", 0, [], [], [], [], [], "", false, false, []);
   late List<User> allusers = [];
   bool flag = false;
   Future<User> getUserData(String phoneNumber) async {
@@ -40,15 +48,10 @@ class _searchPeopleState extends State<searchPeople> {
     final Data =
         await FirebaseDatabase.instance.ref("User/" + phoneNumber).get();
     Map data = Data.value as Map;
-    List friends = [];
-    List friendRequests = [];
-    List LocationSharingPeople = [];
-    List friendRequestsPending = [];
-    List location = [];
-    List numberList = [];
-    List chosenNumber = [];
+    print(data);
     if (data.containsKey("friends")) {
-      friends = data["friends"];
+      friends.addAll(data["friends"]);
+      print(friends);
     }
     if (data.containsKey("friendReqeusts")) {
       friendRequests.addAll(data["friendReqeusts"]);
@@ -175,7 +178,7 @@ class _searchPeopleState extends State<searchPeople> {
 
   void initState() {
     collectData();
-
+    print(friends);
     super.initState();
   }
 
@@ -278,20 +281,24 @@ class _searchPeopleState extends State<searchPeople> {
                         // giant code
                         Color finalColor = Colors.blue;
                         bool flag = true;
+                        int index = 0;
                         for (int i = 0;
                             i < appUser.friendRequests.length;
                             i++) {
                           if (user.phoneNumber ==
                               appUser.friendRequests[i][1]) {
-                            flag = false;
+                            if (appUser.friendRequests[i][0] == "pending") {
+                              finalColor = Colors.orange;
+                            } else {
+                              finalColor = Colors.red;
+                            }
+                            index = i;
                             break;
                           }
                         }
-                        if (widget.currentUser.friends
-                            .contains(allusers[userArea])) {
-                          finalColor = Colors.greenAccent;
-                        } else if (!flag) {
-                          finalColor = Colors.orange;
+                        if (currentUser.friends
+                            .contains(allusers[userArea].phoneNumber)) {
+                          finalColor = Colors.green;
                         }
                         Color color = finalColor;
 
@@ -339,7 +346,30 @@ class _searchPeopleState extends State<searchPeople> {
                                     btnOkText: "Ok",
                                     btnOkColor: Colors.red,
                                   ).show();
-                                } else if (flag == false) {
+                                } else if (color == Colors.green) {
+                                  AwesomeDialog(
+                                    context: context,
+                                    dialogType: DialogType.ERROR,
+                                    animType: AnimType.SCALE,
+                                    headerAnimationLoop: false,
+                                    title: "ERROR",
+                                    desc:
+                                        "The chosen user is already your friend. You can not send requests to your friend",
+                                    titleTextStyle: TextStyle(
+                                      fontWeight: FontWeight.w700,
+                                      fontFamily: "Nunito",
+                                      fontSize: textSize * 25,
+                                      color: Colors.red,
+                                    ),
+                                    descTextStyle: TextStyle(
+                                        fontFamily: "Nunito",
+                                        fontSize: textSize * 20,
+                                        color: Colors.red),
+                                    btnOkOnPress: () {},
+                                    btnOkText: "Ok",
+                                    btnOkColor: Colors.red,
+                                  ).show();
+                                } else if (color == Colors.orange) {
                                   AwesomeDialog(
                                     context: context,
                                     dialogType: DialogType.ERROR,
@@ -385,6 +415,18 @@ class _searchPeopleState extends State<searchPeople> {
                                               fontSize: textSize * 20,
                                               color: Colors.blueAccent),
                                           btnOkOnPress: () async {
+                                            for (int k = 0;
+                                                k <
+                                                    appUser
+                                                        .friendRequests.length;
+                                                k++) {
+                                              if (appUser.friendRequests[k]
+                                                      [1] ==
+                                                  user.phoneNumber) {
+                                                appUser.friendRequests
+                                                    .removeAt(k);
+                                              }
+                                            }
                                             setState(() {
                                               appUser.friendRequests.add([
                                                 "pending",

@@ -15,7 +15,7 @@ class FriendScreen extends StatefulWidget {
 }
 
 class _FriendScreenState extends State<FriendScreen> {
-  int index = 3;
+  int index = 0;
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
@@ -31,10 +31,10 @@ class _FriendScreenState extends State<FriendScreen> {
     List<Widget> pageList = [
       MainFriendScreen(),
       PhoneNumberScreen(),
-      searchPeople(height - 60, width, textEditingController, textSize,
-          currentUser),
-      FriendsScreen(height -60, width,textEditingController2, textSize,
-          currentUser),
+      searchPeople(
+          height - 60, width, textEditingController, textSize, currentUser),
+      FriendsScreen(
+          height - 60, width, textEditingController2, textSize, currentUser),
     ];
     return Container(
       color: Colors.blue,
