@@ -434,6 +434,7 @@ class _searchPeopleState extends State<searchPeople> {
                                               ]);
                                               answer = answer;
                                             });
+                                            // code
                                             await FirebaseDatabase.instance
                                                 .ref("User")
                                                 .update({
@@ -458,33 +459,26 @@ class _searchPeopleState extends State<searchPeople> {
                                                 "phoneNumbersChosen": []
                                               }
                                             });
+                                            final requestUserData =
+                                                await FirebaseDatabase.instance
+                                                    .ref("User/")
+                                                    .child(user.phoneNumber)
+                                                    .child(
+                                                        "friendRequestsPending")
+                                                    .get();
+                                            List requestUserFinalData =
+                                                requestUserData.value as List;
                                             List tempFriendList = [];
-                                            tempFriendList.addAll(
-                                                user.friendRequestsPending);
+                                            tempFriendList
+                                                .addAll(requestUserFinalData);
                                             tempFriendList
                                                 .add(appUser.phoneNumber);
                                             await FirebaseDatabase.instance
                                                 .ref("User")
+                                                .child(user.phoneNumber)
                                                 .update({
-                                              user.phoneNumber: {
-                                                "age": user.age,
-                                                "firstName": user.firstName,
-                                                "lastName": user.lastName,
-                                                "friendReqeusts":
-                                                    user.friendRequests,
-                                                "friendRequestsPending":
-                                                    tempFriendList,
-                                                "image": user.image,
-                                                "password": user.password,
-                                                "friends": user.friends,
-                                                "location": user.location,
-                                                "phoneNumber": user.phoneNumber,
-                                                "locationSharingPeople":
-                                                    user.LocationSharingPeople,
-                                                "numberApproved": false,
-                                                "locationTrackingOn": false,
-                                                "phoneNumbersChosen": []
-                                              }
+                                              "friendRequestsPending":
+                                                  tempFriendList
                                             });
                                           },
                                           btnOkText: "Yes",

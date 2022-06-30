@@ -60,6 +60,7 @@ class SignUpLoadScreenState extends State<SignUpLoadScreen> {
     double textSize = MediaQuery.of(context).textScaleFactor;
     Color mainColor = Colors.grey.shade300;
     int animatedSize = 0;
+    
     return Scaffold(
       backgroundColor: mainColor,
       body: Stack(children: [

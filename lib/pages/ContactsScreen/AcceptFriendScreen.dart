@@ -5,6 +5,9 @@ import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:cupertino_icons/cupertino_icons.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:toggle_bar/toggle_bar.dart';
+
+import '../../python/searchAlgorithm.dart';
 
 class FriendsScreen extends StatefulWidget {
   double height;
@@ -23,28 +26,39 @@ class FriendsScreen extends StatefulWidget {
 class _FriendsScreenState extends State<FriendsScreen> {
   @override
   //begin
+  //Variable decleration begins
   List<String> allDisplayNames = [];
+  int counter = 0;
   int index = 0;
   int highest = 0;
-  late List<int> answer = [];
+  late List answer = [];
   late List<String> tempList2 = [];
   List<Color> colorList1 = [Colors.blue, Colors.blue.shade900];
   List<Color> colorList2 = [Colors.blue.shade900, Colors.blue];
   List<List> friendsList = [];
   List<int> requestList = [];
+  List<String> friendListAnalysisList = [];
+  List<String> requestListAnalysisList = [];
+  int longestFriendListvalue = 0;
+  int longestRequestListValue = 0;
   late User currentUser =
       User(" ", " ", " ", " ", 0, [], [], [], [], [], "", false, false, []);
   late List<User> allusers = [];
   bool flag = false;
-  List<bool> _selected = List.generate(2, (_) =>)
+  List friends = [];
+  List friendRequests = [];
+  List LocationSharingPeople = [];
+  List friendRequestsPending = [];
+  List location = [];
+  List numberList = [];
+  List chosenNumber = [];
+  List<bool> _selected = List.generate(2, (_) => false);
+  //Variable declertion ends
   Future<User> getUserData(String phoneNumber) async {
-    phoneNumber = phoneNumber.trim();
-    phoneNumber = phoneNumber.replaceAll(" ", "");
-    if (phoneNumber[0] != "+") {
-      phoneNumber = "+1" + phoneNumber;
-    }
     final Data =
         await FirebaseDatabase.instance.ref("User/" + phoneNumber).get();
+    phoneNumber = phoneNumber.trim();
+    phoneNumber = phoneNumber.replaceAll(" ", "");
     Map data = Data.value as Map;
     List friends = [];
     List friendRequests = [];
@@ -53,6 +67,10 @@ class _FriendsScreenState extends State<FriendsScreen> {
     List location = [];
     List numberList = [];
     List chosenNumber = [];
+    if (phoneNumber[0] != "+") {
+      phoneNumber = "+1" + phoneNumber;
+    }
+
     if (data.containsKey("friends")) {
       friends.addAll(data["friends"]);
     }
@@ -92,13 +110,6 @@ class _FriendsScreenState extends State<FriendsScreen> {
     );
   }
 
-  List friends = [];
-  List friendRequests = [];
-  List LocationSharingPeople = [];
-  List friendRequestsPending = [];
-  List location = [];
-  List numberList = [];
-  List chosenNumber = [];
   Future<List<User>> getData() async {
     List<User> allUserList = [];
     final finalData = await FirebaseDatabase.instance.ref("User").get();
@@ -164,22 +175,58 @@ class _FriendsScreenState extends State<FriendsScreen> {
       for (int i = 0; i < currentUser.friendRequests.length; i++) {
         for (int j = 0; j < allusers.length; j++) {
           if (allusers[j].phoneNumber == currentUser.friendRequests[i][1]) {
-            friendsList.add(["pending", j]);
+            friendsList.add([currentUser.friendRequests[i][0], j]);
+            friendListAnalysisList
+                .add(users[j].firstName + " " + users[j].lastName);
             break;
           }
+        }
+      }
+      for (int i = 0; i < friendListAnalysisList.length; i++) {
+        if (friendListAnalysisList[i].length > longestFriendListvalue) {
+          longestFriendListvalue = friendListAnalysisList[i].length;
+          print(friendListAnalysisList[i]);
+          print("this is longrestFriendValye");
+          print(longestFriendListvalue);
+        }
+      }
+      for (int i = 0; i < friendListAnalysisList.length; i++) {
+        for (int j = friendListAnalysisList[i].length;
+            j < longestFriendListvalue;
+            j++) {
+          friendListAnalysisList[i] = friendListAnalysisList[i] + " ";
         }
       }
       setState(() {
         friendsList;
       });
+      print(users[0].firstName);
       for (int i = 0; i < currentUser.friendRequestsPending.length; i++) {
         for (int j = 0; j < allusers.length; j++) {
           if (allusers[j].phoneNumber == currentUser.friendRequestsPending[i]) {
             requestList.add(j);
+            print(users[j].firstName + users[j].lastName);
+            requestListAnalysisList
+                .add(users[j].firstName + " " + users[j].lastName);
             break;
           }
         }
       }
+      print(friendsList);
+      for (int i = 0; i < requestListAnalysisList.length; i++) {
+        if (longestRequestListValue < requestListAnalysisList[i].length) {
+          longestRequestListValue = requestListAnalysisList[i].length;
+        }
+      }
+      for (int i = 0; i < requestListAnalysisList.length; i++) {
+        for (int j = requestListAnalysisList[i].length;
+            j < longestRequestListValue;
+            j++) {
+          requestListAnalysisList[i] = requestListAnalysisList[i] + " ";
+        }
+      }
+      print(friendListAnalysisList);
+      print(requestListAnalysisList);
       setState(() {
         requestList;
       });
@@ -229,14 +276,37 @@ class _FriendsScreenState extends State<FriendsScreen> {
                                   color: Colors.blue),
                               textAlign: TextAlign.center,
                               onChanged: (text) {
-                                print(friendsList);
-                                /*  print(allusers);
-                              List<String> dummy = allDisplayNames;
-                              setState(() {
-                                answer = searchNames(tempList2, text, highest);
-                              });
-                              print("why");
-                              print(answer);*/
+                                List<String> dummy = allDisplayNames;
+                                setState(() {
+                                  List tempAns = [];
+                                  if (counter == 1) {
+                                    answer = searchNames(friendListAnalysisList,
+                                        text, longestFriendListvalue + 1, true);
+                                    tempAns.addAll(answer);
+                                    answer = [];
+                                    for (int i = 0; i < tempAns.length; i++) {
+                                      answer.add(friendsList[tempAns[i]]);
+                                    }
+                                  } else {
+                                    answer = searchNames(
+                                        requestListAnalysisList,
+                                        text,
+                                        longestRequestListValue + 1,
+                                        true);
+                                    tempAns.addAll(answer);
+                                    answer = [];
+                                    for (int i = 0; i < tempAns.length; i++) {
+                                      answer.add(requestList[tempAns[i]]);
+                                    }
+                                  }
+                                  setState(() {
+                                    answer;
+                                  });
+                                  print(longestRequestListValue);
+                                  print(text);
+                                  print(requestListAnalysisList);
+                                  print(answer);
+                                });
                               },
                               decoration: InputDecoration(
                                   prefixIcon: Padding(
@@ -292,10 +362,10 @@ class _FriendsScreenState extends State<FriendsScreen> {
                       Container(
                           height: widget.height * 0.8,
                           width: widget.width,
-                          child: index == 0
+                          child: counter == 0
                               ? ListView(
                                   children: [
-                                    ...requestList.map((e) {
+                                    ...answer.map((e) {
                                       Color color;
                                       color = Colors.orange;
                                       return Container(
@@ -773,7 +843,7 @@ class _FriendsScreenState extends State<FriendsScreen> {
                                 )
                               : ListView(
                                   children: [
-                                    ...friendsList.map((e) {
+                                    ...answer.map((e) {
                                       Color color = Colors.red;
                                       if (e[0] == "pending") {
                                         color = Colors.orange;
@@ -926,17 +996,50 @@ class _FriendsScreenState extends State<FriendsScreen> {
                 )
               ],
             ),
-            ToggleButtons(children: [Text(
-                              "Request Sent",
-                              style: TextStyle(
-                                  fontSize: widget.textSize * 15,
-                                  color: colorList1[index]),
-                            ),Text(
-                              "Request Sent",
-                              style: TextStyle(
-                                  fontSize: widget.textSize * 15,
-                                  color: colorList1[index]),
-                            ),], isSelected: _selected)
+            Container(
+              height: widget.height,
+              width: widget.width,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SizedBox(height: widget.height * 0.82),
+                  Container(
+                    height: widget.height * 0.1,
+                    child: ToggleBar(
+                      labels: const [
+                        "Pending",
+                        "Sent",
+                      ],
+                      backgroundBorder: Border.all(
+                        color: Colors.blue,
+                        width: 1,
+                      ),
+                      onSelectionUpdated: (index) {
+                        answer = [];
+
+                        setState(() {
+                          if (index == 0) {
+                            answer.addAll(requestList);
+                          } else {
+                            answer.addAll(friendsList);
+                          }
+                          counter = index;
+                          print(counter);
+                        });
+                      },
+                      selectedTextColor: Colors.grey.shade300,
+                      textColor: Colors.blue,
+                      backgroundColor: Colors.grey.shade300,
+                      selectedTabColor: Colors.blue,
+                      borderRadius: 100,
+                      labelTextStyle: TextStyle(
+                          fontSize: widget.textSize * 20,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ],
+              ),
+            )
           ],
         ));
   }
