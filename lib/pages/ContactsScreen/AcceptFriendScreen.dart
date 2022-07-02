@@ -5,7 +5,6 @@ import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:cupertino_icons/cupertino_icons.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:toggle_bar/toggle_bar.dart';
 
 import '../../python/searchAlgorithm.dart';
 
@@ -33,10 +32,12 @@ class _FriendsScreenState extends State<FriendsScreen> {
   int highest = 0;
   late List answer = [];
   late List<String> tempList2 = [];
-  List<Color> colorList1 = [Colors.blue, Colors.blue.shade900];
-  List<Color> colorList2 = [Colors.blue.shade900, Colors.blue];
+  List<Color> colorList1 = [Colors.blue, Colors.grey.shade300];
+  List<Color> colorTextList1 = [Colors.grey.shade300, Colors.blue];
+  List<Color> colorList2 = [Colors.grey.shade300, Colors.blue];
+  List<Color> colorTextList2 = [Colors.blue, Colors.grey.shade300];
   List<List> friendsList = [];
-  List<int> requestList = [];
+  List requestList = [];
   List<String> friendListAnalysisList = [];
   List<String> requestListAnalysisList = [];
   int longestFriendListvalue = 0;
@@ -230,6 +231,7 @@ class _FriendsScreenState extends State<FriendsScreen> {
       setState(() {
         requestList;
       });
+      answer.addAll(requestList);
     });
   }
 
@@ -997,46 +999,75 @@ class _FriendsScreenState extends State<FriendsScreen> {
               ],
             ),
             Container(
-              height: widget.height,
-              width: widget.width,
+              width : widget.width,
+              height : widget.height,
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  SizedBox(height: widget.height * 0.82),
                   Container(
-                    height: widget.height * 0.1,
-                    child: ToggleBar(
-                      labels: const [
-                        "Pending",
-                        "Sent",
-                      ],
-                      backgroundBorder: Border.all(
-                        color: Colors.blue,
-                        width: 1,
-                      ),
-                      onSelectionUpdated: (index) {
-                        answer = [];
-
-                        setState(() {
-                          if (index == 0) {
-                            answer.addAll(requestList);
-                          } else {
-                            answer.addAll(friendsList);
-                          }
-                          counter = index;
-                          print(counter);
-                        });
-                      },
-                      selectedTextColor: Colors.grey.shade300,
-                      textColor: Colors.blue,
-                      backgroundColor: Colors.grey.shade300,
-                      selectedTabColor: Colors.blue,
-                      borderRadius: 100,
-                      labelTextStyle: TextStyle(
-                          fontSize: widget.textSize * 20,
-                          fontWeight: FontWeight.bold),
+                    width: widget.width * 0.9,
+                    height: widget.height * 0.07,
+                    alignment : Alignment.center,
+                    decoration :BoxDecoration(
+                      border: Border.all(color: Colors.blue, width: 3),
+                      borderRadius: BorderRadius.all(Radius.circular(100))
                     ),
+                    padding: EdgeInsets.symmetric(vertical : widget.height * 0.005, horizontal : widget.width * 0.02),
+                    child : Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children : [
+                        InkWell(
+                          onTap: () => setState(() {
+                            counter = 0;
+                            answer = [];
+                            answer.addAll(requestList);
+                          }),
+                          child: Container(
+                            height : widget.height * (0.06),
+                            width : widget.width * (0.82/2),
+                            child : Center(
+                              child: Text("Pending", style : TextStyle(
+                                color : colorList2[counter],
+                                fontWeight: FontWeight.w700,
+                                fontSize : widget.textSize * 20
+                              )),
+                            ),
+                            decoration: BoxDecoration(
+                              color : colorList1[counter],
+                              borderRadius: BorderRadius.all(Radius.circular(100))
+                            ),
+                          ),
+                        ),
+                         InkWell(
+                          onTap: () => setState(() {
+                            counter = 1;
+                            answer = [];
+                            answer.addAll(friendsList);
+                          }),
+                         child : Container(
+                          height : widget.height * (0.06),
+                          width : widget.width * (0.82/2),
+                          child :  Center(
+                              child: Text("Sent", style : TextStyle(
+                                color : colorList1[counter],
+                                fontWeight: FontWeight.w700,
+                                fontSize : widget.textSize * 20
+                              )),
+                            ),
+                          decoration: BoxDecoration(
+                            color : colorList2[counter],
+                            borderRadius: BorderRadius.all(Radius.circular(100))
+                          ),
+                        )),
+                        
+                      ]
+                    )
+
                   ),
+                  SizedBox(
+                    height : widget.height * 0.04
+                  )
                 ],
               ),
             )

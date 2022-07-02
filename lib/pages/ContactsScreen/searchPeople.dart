@@ -466,11 +466,13 @@ class _searchPeopleState extends State<searchPeople> {
                                                     .child(
                                                         "friendRequestsPending")
                                                     .get();
+                                            List tempFriendList = [];
+                                            if(requestUserData.value != null){
                                             List requestUserFinalData =
                                                 requestUserData.value as List;
-                                            List tempFriendList = [];
                                             tempFriendList
                                                 .addAll(requestUserFinalData);
+                                            }
                                             tempFriendList
                                                 .add(appUser.phoneNumber);
                                             await FirebaseDatabase.instance

@@ -222,7 +222,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         height: height * 0.08,
                         width: height * 0.08,
                         child: NeumorphicButton(
-                            onPressed: () {
+                            onPressed: () async {
                               completeCheck().then((value) {
                                 if (value.description == "") {
                                   if (haveChosen == false) {
@@ -245,7 +245,48 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                                 fontSize: textSize * 20,
                                                 color: Colors.orangeAccent),
                                             btnOkOnPress: () {
-                                              User newUser = User(
+                                              AwesomeDialog(
+                                                context: context,
+                                                dialogType:
+                                                    DialogType.INFO_REVERSED,
+                                                animType: AnimType.SCALE,
+                                                headerAnimationLoop: false,
+                                                desc:
+                                                    "Please enter the 5 digit code sent to your phone number",
+                                                body: Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                                  children: [
+                                                  Text("Verification",
+                                                      style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.w700,
+                                                        fontFamily: "Nunito",
+                                                        fontSize: textSize * 25,
+                                                        color: Colors.blue,
+                                                      )),
+                                                  Text(
+                                                      "Please enter the 5 digit code sent to your phone number",
+                                                      textAlign: TextAlign.center,
+                                                      style: TextStyle(
+                                                          fontFamily: "blue",
+                                                          fontSize:
+                                                              textSize * 20,
+                                                          color: Colors.blue)),
+
+                                                  Container(
+                                                    width: MediaQuery.of(context).size.width * 0.5,
+                                                    height: MediaQuery.of(context).size.height * 0.1
+                                                  )
+                                                ]),
+                                               
+                                                btnOkOnPress: () {},
+                                                btnOkIcon: Icons.verified_sharp,
+                                                btnOkColor: Colors.green,
+                                                btnCancelOnPress: () {},
+                                                btnCancelIcon: Icons.cancel,
+                                                btnCancelColor: Colors.red,
+                                              ).show();
+                                              /*  User newUser = User(
                                                   firstNameController.text,
                                                   lastNameController.text,
                                                   phoneNumberController.text,
@@ -265,7 +306,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                                   MaterialPageRoute(
                                                       builder: (context) =>
                                                           SignUpLoadScreenWithImage(
-                                                              newUser)));
+                                                              newUser)));*/
                                             },
                                             btnOkText: "Yes",
                                             btnOkColor: Colors.green,
@@ -274,7 +315,28 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                             btnCancelColor: Colors.red)
                                         .show();
                                   } else {
-                                    User newUser = User(
+                                    AwesomeDialog(
+                                      context: context,
+                                      dialogType: DialogType.QUESTION,
+                                      animType: AnimType.SCALE,
+                                      headerAnimationLoop: false,
+                                      title: value.title,
+                                      desc: value.description,
+                                      titleTextStyle: TextStyle(
+                                        fontWeight: FontWeight.w700,
+                                        fontFamily: "Nunito",
+                                        fontSize: textSize * 25,
+                                        color: Colors.red,
+                                      ),
+                                      descTextStyle: TextStyle(
+                                          fontFamily: "Nunito",
+                                          fontSize: textSize * 20,
+                                          color: Colors.red),
+                                      btnOkOnPress: () {},
+                                      btnOkIcon: Icons.cancel,
+                                      btnOkColor: Colors.red,
+                                    ).show();
+                                    /*   User newUser = User(
                                         firstNameController.text,
                                         lastNameController.text,
                                         phoneNumberController.text,
@@ -293,7 +355,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) =>
-                                                SignUpLoadScreen(newUser)));
+                                                SignUpLoadScreen(newUser)));*/
                                   }
                                 } else {
                                   AwesomeDialog(

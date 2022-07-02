@@ -29,7 +29,8 @@ class _FriendScreenState extends State<FriendScreen> {
     User currentUser = passOverData[0];
     List<User> allUsers = passOverData[1];
     List<Widget> pageList = [
-      MainFriendScreen(),
+      MainFriendScreen(
+          height - 60, width, textEditingController2, textSize, currentUser),
       PhoneNumberScreen(),
       searchPeople(
           height - 60, width, textEditingController, textSize, currentUser),

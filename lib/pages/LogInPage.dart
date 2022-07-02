@@ -42,20 +42,13 @@ Future<errorDelivery> authorizeUser(String phoneNumber, String firstName,
   final Data = await FirebaseDatabase.instance.ref("User/" + phoneNumber).get();
   if (Data.exists) {
     Map data = Data.value as Map;
-    print(firstName);
-    print(lastName);
-    print(data["firstName"]);
-    print(data["lastName"]);
     if (data["firstName"].toUpperCase() != firstName.toUpperCase()) {
-      print("this");
-      print(data["firstName"]);
       return errorDelivery(
           false,
           data["firstName"],
           "We are sorry but the given name is not matching up with the phone number.1",
           User("", "", "", "", 0, [], [], [], [], [], "", false, false, []));
     } else if (data["lastName"].toUpperCase() != lastName.toUpperCase()) {
-      print("that");
       return errorDelivery(
           false,
           "Name",
@@ -68,7 +61,6 @@ Future<errorDelivery> authorizeUser(String phoneNumber, String firstName,
           "We are sorry but the given password is not correct.",
           User("", "", "", "", 0, [], [], [], [], [], "", false, false, []));
     }
-    print(data);
     List friends = [];
     List friendRequests = [];
     List LocationSharingPeople = [];
@@ -79,27 +71,21 @@ Future<errorDelivery> authorizeUser(String phoneNumber, String firstName,
     if (data.containsKey("friends")) {
       friends = data["friends"];
     }
-    print("1");
     if (data.containsKey("friendReqeusts")) {
       friendRequests.addAll(data["friendReqeusts"]);
     }
-    print("2");
     if (data.containsKey("locationSharingPeople")) {
       LocationSharingPeople.addAll(data["locationSharingPeople"]);
     }
-    print("3");
     if (data.containsKey("friendRequestsPending")) {
       friendRequestsPending.addAll(data["friendRequestsPending"]);
     }
-    print("4");
     if (data.containsKey("location")) {
       location.addAll(["location"]);
     }
-    print("5");
     if (data.containsKey("phoneNumbersChosen")) {
       numberList.addAll(["phoneNumbersChosen"]);
     }
-    print("6");
     if (data.containsKey("phoneNumbersChosen")) {
       chosenNumber.addAll(data["phoneNumbersChosen"]);
     }
