@@ -441,7 +441,7 @@ class _FriendsScreenState extends State<FriendsScreen> {
                                                               shape:
                                                                   NeumorphicShape
                                                                       .concave),
-                                                          child: currentUser
+                                                          child: allusers[e]
                                                                       .image ==
                                                                   ""
                                                               ? CircleAvatar(
@@ -471,7 +471,7 @@ class _FriendsScreenState extends State<FriendsScreen> {
                                                                       0.11,
                                                                   backgroundImage:
                                                                       NetworkImage(
-                                                                          currentUser
+                                                                          allusers[e]
                                                                               .image),
                                                                 )),
                                                       SizedBox(
@@ -576,7 +576,9 @@ class _FriendsScreenState extends State<FriendsScreen> {
                                                                 currentDataData[
                                                                     "friends"]);
                                                           }
-
+                                                          theSendingFriendData
+                                                              .add(allusers[e]
+                                                                  .phoneNumber);
                                                           await FirebaseDatabase
                                                               .instance
                                                               .ref("User")
@@ -659,11 +661,22 @@ class _FriendsScreenState extends State<FriendsScreen> {
                                                                     "friendReqeusts")
                                                                 .set(
                                                                     finalAnswer);
-                                                            if (data.containsKey(
-                                                                "friends")) {
+                                                            var dataNow1 = await FirebaseDatabase
+                                                                .instance
+                                                                .ref("User")
+                                                                .child(allusers[
+                                                                        e]
+                                                                    .phoneNumber)
+                                                                .get();
+                                                            Map dataNow = dataNow1.value as Map;
+                                                            print(dataNow);
+                                                            if (dataNow
+                                                                .containsKey(
+                                                                    "friends")) {
                                                               List temp2 = [];
-                                                              temp2.addAll(data[
-                                                                  "friends"]);
+                                                              temp2.addAll(
+                                                                  dataNow[
+                                                                      "friends"]);
                                                               temp2.add(currentUser
                                                                   .phoneNumber);
                                                               await FirebaseDatabase
@@ -942,36 +955,37 @@ class _FriendsScreenState extends State<FriendsScreen> {
                                                                 width: 5),
                                                         shape: NeumorphicShape
                                                             .concave),
-                                                    child: currentUser.image ==
-                                                            ""
-                                                        ? CircleAvatar(
-                                                            radius:
-                                                                widget.height *
+                                                    child:
+                                                        allusers[e[1]].image ==
+                                                                ""
+                                                            ? CircleAvatar(
+                                                                radius: widget
+                                                                        .height *
                                                                     (0.11 / 2),
-                                                            backgroundColor:
-                                                                Colors.grey
-                                                                    .shade300,
-                                                            child:
-                                                                NeumorphicIcon(
-                                                              Icons.tag_faces,
-                                                              size: widget
-                                                                      .textSize *
-                                                                  70,
-                                                              style:
-                                                                  NeumorphicStyle(
+                                                                backgroundColor:
+                                                                    Colors.grey
+                                                                        .shade300,
+                                                                child:
+                                                                    NeumorphicIcon(
+                                                                  Icons
+                                                                      .tag_faces,
+                                                                  size: widget
+                                                                          .textSize *
+                                                                      70,
+                                                                  style: NeumorphicStyle(
                                                                       color:
                                                                           color),
-                                                            ),
-                                                          )
-                                                        : CircleAvatar(
-                                                            radius:
-                                                                widget.height *
+                                                                ),
+                                                              )
+                                                            : CircleAvatar(
+                                                                radius: widget
+                                                                        .height *
                                                                     (0.11 / 2),
-                                                            backgroundImage:
-                                                                NetworkImage(
-                                                                    currentUser
-                                                                        .image),
-                                                          ),
+                                                                backgroundImage:
+                                                                    NetworkImage(
+                                                                        allusers[e[1]]
+                                                                            .image),
+                                                              ),
                                                   ),
                                                   SizedBox(
                                                     width:

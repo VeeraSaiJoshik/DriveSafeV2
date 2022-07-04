@@ -246,6 +246,7 @@ class MainFriendScreenState extends State<MainFriendScreen> {
                                 List<String> dummy = allDisplayNames;
                                 setState(() {
                                   List tempAns = [];
+
                                   answer = searchNames(requestListAnalysisList,
                                       text, longestRequestListValue + 1, true);
                                   if (allusers.length == answer.length ||

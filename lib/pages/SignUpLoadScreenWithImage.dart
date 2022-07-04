@@ -101,7 +101,7 @@ class SignUpLoadScreenWithImageState extends State<SignUpLoadScreenWithImage> wi
 
   void initState() {
     upload();
-    uploaduploadTestData();
+    //uploaduploadTestData();
     controller = AnimationController(vsync: this);
     super.initState();
   }

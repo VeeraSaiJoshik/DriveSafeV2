@@ -276,28 +276,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                             btnCancelColor: Colors.red)
                                         .show();
                                   } else {
-                                    AwesomeDialog(
-                                      context: context,
-                                      dialogType: DialogType.QUESTION,
-                                      animType: AnimType.SCALE,
-                                      headerAnimationLoop: false,
-                                      title: value.title,
-                                      desc: value.description,
-                                      titleTextStyle: TextStyle(
-                                        fontWeight: FontWeight.w700,
-                                        fontFamily: "Nunito",
-                                        fontSize: textSize * 25,
-                                        color: Colors.red,
-                                      ),
-                                      descTextStyle: TextStyle(
-                                          fontFamily: "Nunito",
-                                          fontSize: textSize * 20,
-                                          color: Colors.red),
-                                      btnOkOnPress: () {},
-                                      btnOkIcon: Icons.cancel,
-                                      btnOkColor: Colors.red,
-                                    ).show();
-                                    /*   User newUser = User(
+                                    User newUser = User(
                                         firstNameController.text,
                                         lastNameController.text,
                                         phoneNumberController.text,
@@ -316,7 +295,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) =>
-                                                SignUpLoadScreen(newUser)));*/
+                                                SignUpLoadScreen(newUser)));
                                   }
                                 } else {
                                   AwesomeDialog(

@@ -277,7 +277,7 @@ class _searchPeopleState extends State<searchPeople> {
             ),
           ),
           Container(
-              height: widget.height * 0.806,
+              height: widget.height * 0.80,
               /*color: Colors.black,*/
               //   color: Colors.pink,
               child: Scrollbar(
@@ -293,7 +293,8 @@ class _searchPeopleState extends State<searchPeople> {
                         User user = allusers[userArea];
                         User appUser = currentUser;
                         List<String> awaitList = requestList;
-
+                        print(user.firstName);
+                        print(user.image);
                         // giant code
                         Color finalColor = Colors.blue;
                         bool flag = true;
@@ -525,7 +526,7 @@ class _searchPeopleState extends State<searchPeople> {
                                             border: NeumorphicBorder(
                                                 color: color, width: 5),
                                             shape: NeumorphicShape.concave),
-                                        child: currentUser.image == ""
+                                        child: user.image == ""
                                             ? CircleAvatar(
                                                 radius:
                                                     widget.height * (0.11 / 2),
@@ -538,10 +539,16 @@ class _searchPeopleState extends State<searchPeople> {
                                                       color: color),
                                                 ),
                                               )
-                                            : CircleAvatar(
-                                                radius: widget.height * 0.11,
-                                                backgroundImage: NetworkImage(
-                                                    currentUser.image),
+                                            : InkWell(
+                                                onTap: () {
+                                                  print(user.image);
+                                                },
+                                                child: CircleAvatar(
+                                                  radius: widget.height *
+                                                      (0.11 / 2),
+                                                  backgroundImage:
+                                                      NetworkImage(user.image),
+                                                ),
                                               )),
                                     SizedBox(
                                       width: MediaQuery.of(context).size.width *
