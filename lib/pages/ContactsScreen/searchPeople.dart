@@ -212,9 +212,23 @@ class _searchPeopleState extends State<searchPeople> {
                         onChanged: (text) {
                           List<String> dummy = allDisplayNames;
                           flag = true;
+                          print("=============================");
+                          print(allusers.length);
                           answer = searchNames(tempList2, text, highest, flag);
-                          answer.addAll(
-                              searchPhoneNumbers(phoneNumberSearchList, text));
+                          print(answer.length);
+                          print(tempList2.length);
+                          print(text);
+                          if (allusers.length == answer.length ||
+                              answer.isEmpty) {
+                            if (text != "") {
+                              answer = [];
+                              print(searchPhoneNumbers(
+                                  phoneNumberSearchList, text, flag));
+                              answer.addAll(searchPhoneNumbers(
+                                  phoneNumberSearchList, text, flag));
+                              print(answer);
+                            }
+                          }
                           setState(() {});
                         },
                         decoration: InputDecoration(

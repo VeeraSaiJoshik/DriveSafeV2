@@ -242,14 +242,23 @@ class MainFriendScreenState extends State<MainFriendScreen> {
                                   color: Colors.blue),
                               textAlign: TextAlign.center,
                               onChanged: (text) {
+                                flag = true;
                                 List<String> dummy = allDisplayNames;
                                 setState(() {
                                   List tempAns = [];
-
                                   answer = searchNames(requestListAnalysisList,
                                       text, longestRequestListValue + 1, true);
-                                  answer.addAll(searchPhoneNumbers(
-                                      phoneNumberList, text));
+                                  if (allusers.length == answer.length ||
+                                      answer.isEmpty) {
+                                    if (text != "") {
+                                      answer = [];
+                                      print(searchPhoneNumbers(
+                                          phoneNumberList, text, flag));
+                                      answer.addAll(searchPhoneNumbers(
+                                          phoneNumberList, text, flag));
+                                      print(answer);
+                                    }
+                                  }
                                   tempAns.addAll(answer);
                                   answer = [];
                                   for (int i = 0; i < tempAns.length; i++) {

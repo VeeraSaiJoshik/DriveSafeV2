@@ -1,15 +1,18 @@
 List<int> searchPhoneNumbers(
-  List<String> phoneNumber,
-  String queryText,
-) {
+    List<String> phoneNumber, String queryText, bool haveAlreadyInitiated) {
   List<int> finalList = [];
   List<String> beginningList = [];
-  for (int i = 0; i < phoneNumber.length; i++) {
-    if (phoneNumber[i].contains(queryText)) {
-      beginningList.add(phoneNumber[i]);
-    }
+  if (double.tryParse(queryText) == null) {
+    return [];
   }
-  List<int> tempList = [];
+  if (queryText == "" || !(haveAlreadyInitiated)) {
+    for (int i = 0; i < phoneNumber.length; i++) {
+      finalList.add(i);
+    }
+    return finalList;
+  }
+
+  List<String> tempList = [];
   List<String> tempList2 = [];
   tempList2.addAll(phoneNumber);
   for (int i = 0; i < 13 - queryText.length; i++) {
@@ -17,19 +20,23 @@ List<int> searchPhoneNumbers(
     tempList = [];
     for (int k = 0; k < total; k++) {
       if (tempList2[k].substring(i, i + queryText.length) == queryText) {
-        tempList.add(k);
+        tempList.add(tempList2[k]);
         tempList2.remove(tempList2[k]);
         k--;
         total--;
       }
     }
     tempList.sort();
-    finalList = finalList + tempList;
+    print(tempList);
+    for (int l = 0; l < tempList.length; l++) {
+      finalList.add(phoneNumber.indexOf(tempList[l]));
+    }
   }
   return finalList;
 }
 
-List<int> searchNames(List<String> phoneNumber, String queryText, int Longest, bool haveAlreadyInitiated) {
+List<int> searchNames(List<String> phoneNumber, String queryText, int Longest,
+    bool haveAlreadyInitiated) {
   List<String> finalList = [];
   int highest = 0;
   List<int> answer = [];
@@ -62,4 +69,3 @@ List<int> searchNames(List<String> phoneNumber, String queryText, int Longest, b
   }
   return answer;
 }
-

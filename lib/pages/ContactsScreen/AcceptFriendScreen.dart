@@ -181,7 +181,7 @@ class _FriendsScreenState extends State<FriendsScreen> {
             friendsList.add([currentUser.friendRequests[i][0], j]);
             friendListAnalysisList
                 .add(users[j].firstName + " " + users[j].lastName);
-            friendListPhoneNumberList.add(users[j].phoneNumber);
+            friendListPhoneNumberList.add(allusers[j].phoneNumber);
             break;
           }
         }
@@ -189,9 +189,6 @@ class _FriendsScreenState extends State<FriendsScreen> {
       for (int i = 0; i < friendListAnalysisList.length; i++) {
         if (friendListAnalysisList[i].length > longestFriendListvalue) {
           longestFriendListvalue = friendListAnalysisList[i].length;
-          print(friendListAnalysisList[i]);
-          print("this is longrestFriendValye");
-          print(longestFriendListvalue);
         }
       }
       for (int i = 0; i < friendListAnalysisList.length; i++) {
@@ -204,12 +201,11 @@ class _FriendsScreenState extends State<FriendsScreen> {
       setState(() {
         friendsList;
       });
-      print(users[0].firstName);
       for (int i = 0; i < currentUser.friendRequestsPending.length; i++) {
         for (int j = 0; j < allusers.length; j++) {
           if (allusers[j].phoneNumber == currentUser.friendRequestsPending[i]) {
             requestList.add(j);
-            print(users[j].firstName + users[j].lastName);
+
             requestListAnalysisList
                 .add(users[j].firstName + " " + users[j].lastName);
             requestListFriendAnalysisList.add(users[j].phoneNumber);
@@ -217,7 +213,7 @@ class _FriendsScreenState extends State<FriendsScreen> {
           }
         }
       }
-      print(friendsList);
+
       for (int i = 0; i < requestListAnalysisList.length; i++) {
         if (longestRequestListValue < requestListAnalysisList[i].length) {
           longestRequestListValue = requestListAnalysisList[i].length;
@@ -230,8 +226,7 @@ class _FriendsScreenState extends State<FriendsScreen> {
           requestListAnalysisList[i] = requestListAnalysisList[i] + " ";
         }
       }
-      print(friendListAnalysisList);
-      print(requestListAnalysisList);
+
       setState(() {
         requestList;
       });
@@ -251,7 +246,6 @@ class _FriendsScreenState extends State<FriendsScreen> {
     setState(() {
       requestList;
     });
-    print(friendsList);
     super.initState();
   }
 
@@ -283,13 +277,23 @@ class _FriendsScreenState extends State<FriendsScreen> {
                               textAlign: TextAlign.center,
                               onChanged: (text) {
                                 List<String> dummy = allDisplayNames;
+                                flag = true;
                                 setState(() {
                                   List tempAns = [];
                                   if (counter == 1) {
                                     answer = searchNames(friendListAnalysisList,
                                         text, longestFriendListvalue + 1, true);
-                                    answer.addAll(searchPhoneNumbers(
-                                        friendListPhoneNumberList, text));
+                                    if (allusers.length == answer.length ||
+                                        answer.isEmpty) {
+                                      if (text != "") {
+                                        answer = [];
+                                        answer.addAll(searchPhoneNumbers(
+                                            friendListPhoneNumberList,
+                                            text,
+                                            flag));
+                                      }
+                                    }
+
                                     tempAns.addAll(answer);
                                     answer = [];
                                     for (int i = 0; i < tempAns.length; i++) {
@@ -301,8 +305,18 @@ class _FriendsScreenState extends State<FriendsScreen> {
                                         text,
                                         longestRequestListValue + 1,
                                         true);
-                                    answer.addAll(searchPhoneNumbers(
-                                        requestListFriendAnalysisList, text));
+                                    if (allusers.length == answer.length ||
+                                        answer.isEmpty) {
+                                      if (text != "") {
+                                        answer = [];
+
+                                        answer.addAll(searchPhoneNumbers(
+                                            requestListFriendAnalysisList,
+                                            text,
+                                            flag));
+                                      }
+                                    }
+
                                     tempAns.addAll(answer);
                                     answer = [];
                                     for (int i = 0; i < tempAns.length; i++) {
@@ -312,10 +326,6 @@ class _FriendsScreenState extends State<FriendsScreen> {
                                   setState(() {
                                     answer;
                                   });
-                                  print(longestRequestListValue);
-                                  print(text);
-                                  print(requestListAnalysisList);
-                                  print(answer);
                                 });
                               },
                               decoration: InputDecoration(
@@ -566,11 +576,7 @@ class _FriendsScreenState extends State<FriendsScreen> {
                                                                 currentDataData[
                                                                     "friends"]);
                                                           }
-                                                          print(
-                                                              currentDataData);
-                                                          theSendingFriendData
-                                                              .add(allusers[e]
-                                                                  .phoneNumber);
+
                                                           await FirebaseDatabase
                                                               .instance
                                                               .ref("User")
@@ -624,14 +630,10 @@ class _FriendsScreenState extends State<FriendsScreen> {
                                                                     .get();
                                                             Map data = finalData
                                                                 .value as Map;
-                                                            print(data);
                                                             List temp = [];
                                                             List finalAnswer =
                                                                 [];
-                                                            print(
-                                                                "before jere");
-                                                            temp.addAll(data[
-                                                                "friendReqeusts"]);
+
                                                             for (int i = 0;
                                                                 i < temp.length;
                                                                 i++) {
@@ -647,7 +649,6 @@ class _FriendsScreenState extends State<FriendsScreen> {
                                                                 }
                                                               }
                                                             }
-                                                            print(finalAnswer);
                                                             await FirebaseDatabase
                                                                 .instance
                                                                 .ref("User")
