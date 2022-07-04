@@ -297,23 +297,6 @@ class _DriveSafeHomePageState extends State<DriveSafeHomePage> {
                                 BorderRadius.all(Radius.circular(30)))),
                       ),
                     ),
-                    /* Container(
-                        width: width * (0.95),
-                        height: height * ((0.46 / 2) + 0.04),
-                        child: NeumorphicButton(
-                          style: NeumorphicStyle(
-                              depth: 10,
-                              color: Colors.blue,
-                              shadowLightColor: Colors.transparent,
-                              boxShape: NeumorphicBoxShape.roundRect(
-                                  BorderRadius.all(Radius.circular(30)))),
-                            child: SizedBox(
-                                  width:10,
-                                  child: Container(color: Colors.black),
-                                  
-                                  height: 10,
-                                ),
-                        )),*/
                   ]))
             ],
           ),

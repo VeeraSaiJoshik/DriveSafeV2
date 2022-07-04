@@ -1,23 +1,23 @@
-List<String> searchPhoneNumbers(
+List<int> searchPhoneNumbers(
   List<String> phoneNumber,
   String queryText,
 ) {
-  List<String> finalList = [];
+  List<int> finalList = [];
   List<String> beginningList = [];
   for (int i = 0; i < phoneNumber.length; i++) {
     if (phoneNumber[i].contains(queryText)) {
       beginningList.add(phoneNumber[i]);
     }
   }
-  List<String> tempList = [];
+  List<int> tempList = [];
   List<String> tempList2 = [];
   tempList2.addAll(phoneNumber);
-  for (int i = 0; i < 10 - queryText.length; i++) {
+  for (int i = 0; i < 13 - queryText.length; i++) {
     int total = tempList2.length;
     tempList = [];
     for (int k = 0; k < total; k++) {
       if (tempList2[k].substring(i, i + queryText.length) == queryText) {
-        tempList.add(tempList2[k]);
+        tempList.add(k);
         tempList2.remove(tempList2[k]);
         k--;
         total--;

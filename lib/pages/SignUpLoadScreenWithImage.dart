@@ -27,7 +27,8 @@ String createRandomPhoneNumber() {
   return phoneNumber;
 }
 
-class SignUpLoadScreenWithImageState extends State<SignUpLoadScreenWithImage> {
+class SignUpLoadScreenWithImageState extends State<SignUpLoadScreenWithImage> with SingleTickerProviderStateMixin{
+  late final AnimationController controller ;
   void upload() async {
     await FirebaseDatabase.instance.ref("User").update({
       widget.appUser.phoneNumber: {
@@ -101,9 +102,13 @@ class SignUpLoadScreenWithImageState extends State<SignUpLoadScreenWithImage> {
   void initState() {
     upload();
     uploaduploadTestData();
+    controller = AnimationController(vsync: this);
     super.initState();
   }
-
+  void dispose(){
+    this.dispose();
+    controller.dispose();
+  }
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
@@ -123,12 +128,14 @@ class SignUpLoadScreenWithImageState extends State<SignUpLoadScreenWithImage> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                 InkWell(
-                  onTap: () => Navigator.pushAndRemoveUntil(
+                  onTap: () {Navigator.pushAndRemoveUntil(
                       context,
                       MaterialPageRoute(
                           builder: ((context) =>
                               DriveSafeHomePage(widget.appUser))),
-                      (route) => false),
+                      (route) => false);
+                      controller.animateTo(2);
+                      },
                   child: NeumorphicIcon(
                     CupertinoIcons.car_detailed,
                     style: NeumorphicStyle(

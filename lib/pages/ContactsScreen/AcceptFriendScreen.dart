@@ -39,6 +39,8 @@ class _FriendsScreenState extends State<FriendsScreen> {
   List<List> friendsList = [];
   List requestList = [];
   List<String> friendListAnalysisList = [];
+  List<String> friendListPhoneNumberList = [];
+  List<String> requestListFriendAnalysisList = [];
   List<String> requestListAnalysisList = [];
   int longestFriendListvalue = 0;
   int longestRequestListValue = 0;
@@ -179,6 +181,7 @@ class _FriendsScreenState extends State<FriendsScreen> {
             friendsList.add([currentUser.friendRequests[i][0], j]);
             friendListAnalysisList
                 .add(users[j].firstName + " " + users[j].lastName);
+            friendListPhoneNumberList.add(users[j].phoneNumber);
             break;
           }
         }
@@ -209,6 +212,7 @@ class _FriendsScreenState extends State<FriendsScreen> {
             print(users[j].firstName + users[j].lastName);
             requestListAnalysisList
                 .add(users[j].firstName + " " + users[j].lastName);
+            requestListFriendAnalysisList.add(users[j].phoneNumber);
             break;
           }
         }
@@ -284,6 +288,8 @@ class _FriendsScreenState extends State<FriendsScreen> {
                                   if (counter == 1) {
                                     answer = searchNames(friendListAnalysisList,
                                         text, longestFriendListvalue + 1, true);
+                                    answer.addAll(searchPhoneNumbers(
+                                        friendListPhoneNumberList, text));
                                     tempAns.addAll(answer);
                                     answer = [];
                                     for (int i = 0; i < tempAns.length; i++) {
@@ -295,6 +301,8 @@ class _FriendsScreenState extends State<FriendsScreen> {
                                         text,
                                         longestRequestListValue + 1,
                                         true);
+                                    answer.addAll(searchPhoneNumbers(
+                                        requestListFriendAnalysisList, text));
                                     tempAns.addAll(answer);
                                     answer = [];
                                     for (int i = 0; i < tempAns.length; i++) {
@@ -405,39 +413,57 @@ class _FriendsScreenState extends State<FriendsScreen> {
                                                             0.05,
                                                       ),
                                                       Neumorphic(
-                                                        style: NeumorphicStyle(
-                                                            boxShape:
-                                                                NeumorphicBoxShape
-                                                                    .circle(),
-                                                            depth: -15,
-                                                            color: Colors
-                                                                .grey.shade300,
-                                                            lightSource:
-                                                                LightSource
-                                                                    .topLeft,
-                                                            border:
-                                                                NeumorphicBorder(
-                                                                    color:
-                                                                        color,
-                                                                    width: 5),
-                                                            shape:
-                                                                NeumorphicShape
-                                                                    .concave),
-                                                        child: Container(
-                                                            height:
-                                                                widget.height *
-                                                                    0.11,
-                                                            width:
-                                                                widget.height *
-                                                                    0.11,
-                                                            decoration:
-                                                                const BoxDecoration(
-                                                              borderRadius: BorderRadius
-                                                                  .all(Radius
-                                                                      .circular(
-                                                                          100)),
-                                                            )),
-                                                      ),
+                                                          style: NeumorphicStyle(
+                                                              boxShape:
+                                                                  NeumorphicBoxShape
+                                                                      .circle(),
+                                                              depth: -15,
+                                                              color: Colors.grey
+                                                                  .shade300,
+                                                              lightSource:
+                                                                  LightSource
+                                                                      .topLeft,
+                                                              border:
+                                                                  NeumorphicBorder(
+                                                                      color:
+                                                                          color,
+                                                                      width: 5),
+                                                              shape:
+                                                                  NeumorphicShape
+                                                                      .concave),
+                                                          child: currentUser
+                                                                      .image ==
+                                                                  ""
+                                                              ? CircleAvatar(
+                                                                  radius: widget
+                                                                          .height *
+                                                                      (0.11 /
+                                                                          2),
+                                                                  backgroundColor:
+                                                                      Colors
+                                                                          .grey
+                                                                          .shade300,
+                                                                  child:
+                                                                      NeumorphicIcon(
+                                                                    Icons
+                                                                        .tag_faces,
+                                                                    size: widget
+                                                                            .textSize *
+                                                                        70,
+                                                                    style: NeumorphicStyle(
+                                                                        color:
+                                                                            color),
+                                                                  ),
+                                                                )
+                                                              : CircleAvatar(
+                                                                  radius: widget
+                                                                          .height *
+                                                                      0.11,
+                                                                  backgroundImage:
+                                                                      NetworkImage(
+                                                                          currentUser
+                                                                              .image),
+                                                                )),
                                                       SizedBox(
                                                         width: MediaQuery.of(
                                                                     context)
@@ -513,8 +539,7 @@ class _FriendsScreenState extends State<FriendsScreen> {
                                                       NeumorphicButton(
                                                         onPressed: () async {
                                                           setState(() {
-                                                            requestList
-                                                                .remove(e);
+                                                            answer.remove(e);
                                                           });
                                                           currentUser
                                                               .friendRequestsPending
@@ -522,8 +547,29 @@ class _FriendsScreenState extends State<FriendsScreen> {
                                                             allusers[e]
                                                                 .phoneNumber,
                                                           );
-                                                          friends.add(
-                                                              allusers[e]
+                                                          final currentData =
+                                                              await FirebaseDatabase
+                                                                  .instance
+                                                                  .ref("User")
+                                                                  .get();
+                                                          Map currentDataData =
+                                                              currentData.value
+                                                                  as Map;
+
+                                                          List
+                                                              theSendingFriendData =
+                                                              [];
+                                                          if (currentDataData
+                                                              .containsKey(
+                                                                  "friends")) {
+                                                            theSendingFriendData.addAll(
+                                                                currentDataData[
+                                                                    "friends"]);
+                                                          }
+                                                          print(
+                                                              currentDataData);
+                                                          theSendingFriendData
+                                                              .add(allusers[e]
                                                                   .phoneNumber);
                                                           await FirebaseDatabase
                                                               .instance
@@ -550,7 +596,8 @@ class _FriendsScreenState extends State<FriendsScreen> {
                                                             "password":
                                                                 currentUser
                                                                     .password,
-                                                            "friends": friends,
+                                                            "friends":
+                                                                theSendingFriendData,
                                                             "location":
                                                                 currentUser
                                                                     .location,
@@ -572,8 +619,7 @@ class _FriendsScreenState extends State<FriendsScreen> {
                                                                 await FirebaseDatabase
                                                                     .instance
                                                                     .ref("User")
-                                                                    .child(allusers[
-                                                                            e]
+                                                                    .child(currentUser
                                                                         .phoneNumber)
                                                                     .get();
                                                             Map data = finalData
@@ -612,7 +658,6 @@ class _FriendsScreenState extends State<FriendsScreen> {
                                                                     "friendReqeusts")
                                                                 .set(
                                                                     finalAnswer);
-
                                                             if (data.containsKey(
                                                                 "friends")) {
                                                               List temp2 = [];
@@ -896,19 +941,36 @@ class _FriendsScreenState extends State<FriendsScreen> {
                                                                 width: 5),
                                                         shape: NeumorphicShape
                                                             .concave),
-                                                    child: Container(
-                                                        height: widget.height *
-                                                            0.11,
-                                                        width: widget.height *
-                                                            0.11,
-                                                        decoration:
-                                                            const BoxDecoration(
-                                                          borderRadius:
-                                                              BorderRadius.all(
-                                                                  Radius
-                                                                      .circular(
-                                                                          100)),
-                                                        )),
+                                                    child: currentUser.image ==
+                                                            ""
+                                                        ? CircleAvatar(
+                                                            radius:
+                                                                widget.height *
+                                                                    (0.11 / 2),
+                                                            backgroundColor:
+                                                                Colors.grey
+                                                                    .shade300,
+                                                            child:
+                                                                NeumorphicIcon(
+                                                              Icons.tag_faces,
+                                                              size: widget
+                                                                      .textSize *
+                                                                  70,
+                                                              style:
+                                                                  NeumorphicStyle(
+                                                                      color:
+                                                                          color),
+                                                            ),
+                                                          )
+                                                        : CircleAvatar(
+                                                            radius:
+                                                                widget.height *
+                                                                    (0.11 / 2),
+                                                            backgroundImage:
+                                                                NetworkImage(
+                                                                    currentUser
+                                                                        .image),
+                                                          ),
                                                   ),
                                                   SizedBox(
                                                     width:
@@ -999,75 +1061,71 @@ class _FriendsScreenState extends State<FriendsScreen> {
               ],
             ),
             Container(
-              width : widget.width,
-              height : widget.height,
+              width: widget.width,
+              height: widget.height,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.end,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Container(
-                    width: widget.width * 0.9,
-                    height: widget.height * 0.07,
-                    alignment : Alignment.center,
-                    decoration :BoxDecoration(
-                      border: Border.all(color: Colors.blue, width: 3),
-                      borderRadius: BorderRadius.all(Radius.circular(100))
-                    ),
-                    padding: EdgeInsets.symmetric(vertical : widget.height * 0.005, horizontal : widget.width * 0.02),
-                    child : Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children : [
-                        InkWell(
-                          onTap: () => setState(() {
-                            counter = 0;
-                            answer = [];
-                            answer.addAll(requestList);
-                          }),
-                          child: Container(
-                            height : widget.height * (0.06),
-                            width : widget.width * (0.82/2),
-                            child : Center(
-                              child: Text("Pending", style : TextStyle(
-                                color : colorList2[counter],
-                                fontWeight: FontWeight.w700,
-                                fontSize : widget.textSize * 20
-                              )),
+                      width: widget.width * 0.9,
+                      height: widget.height * 0.07,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                          border: Border.all(color: Colors.blue, width: 3),
+                          color: Colors.grey.shade300,
+                          borderRadius: BorderRadius.all(Radius.circular(100))),
+                      padding: EdgeInsets.symmetric(
+                          vertical: widget.height * 0.005,
+                          horizontal: widget.width * 0.02),
+                      child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            InkWell(
+                              onTap: () => setState(() {
+                                counter = 0;
+                                answer = [];
+                                answer.addAll(requestList);
+                              }),
+                              child: Container(
+                                height: widget.height * (0.06),
+                                width: widget.width * (0.82 / 2),
+                                child: Center(
+                                  child: Text("Pending",
+                                      style: TextStyle(
+                                          color: colorList2[counter],
+                                          fontWeight: FontWeight.w700,
+                                          fontSize: widget.textSize * 20)),
+                                ),
+                                decoration: BoxDecoration(
+                                    color: colorList1[counter],
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(100))),
+                              ),
                             ),
-                            decoration: BoxDecoration(
-                              color : colorList1[counter],
-                              borderRadius: BorderRadius.all(Radius.circular(100))
-                            ),
-                          ),
-                        ),
-                         InkWell(
-                          onTap: () => setState(() {
-                            counter = 1;
-                            answer = [];
-                            answer.addAll(friendsList);
-                          }),
-                         child : Container(
-                          height : widget.height * (0.06),
-                          width : widget.width * (0.82/2),
-                          child :  Center(
-                              child: Text("Sent", style : TextStyle(
-                                color : colorList1[counter],
-                                fontWeight: FontWeight.w700,
-                                fontSize : widget.textSize * 20
-                              )),
-                            ),
-                          decoration: BoxDecoration(
-                            color : colorList2[counter],
-                            borderRadius: BorderRadius.all(Radius.circular(100))
-                          ),
-                        )),
-                        
-                      ]
-                    )
-
-                  ),
-                  SizedBox(
-                    height : widget.height * 0.04
-                  )
+                            InkWell(
+                                onTap: () => setState(() {
+                                      counter = 1;
+                                      answer = [];
+                                      answer.addAll(friendsList);
+                                    }),
+                                child: Container(
+                                  height: widget.height * (0.06),
+                                  width: widget.width * (0.82 / 2),
+                                  child: Center(
+                                    child: Text("Sent",
+                                        style: TextStyle(
+                                            color: colorList1[counter],
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: widget.textSize * 20)),
+                                  ),
+                                  decoration: BoxDecoration(
+                                      color: colorList2[counter],
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(100))),
+                                )),
+                          ])),
+                  SizedBox(height: widget.height * 0.04)
                 ],
               ),
             )

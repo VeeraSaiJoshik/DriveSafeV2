@@ -25,7 +25,6 @@ class MainFriendScreenState extends State<MainFriendScreen> {
   //begin
   //Variable decleration begins
   List<String> allDisplayNames = [];
-  int counter = 0;
   int index = 0;
   int highest = 0;
   late List answer = [];
@@ -33,9 +32,9 @@ class MainFriendScreenState extends State<MainFriendScreen> {
   List<Color> colorList2 = [Colors.blue.shade900, Colors.blue];
   List<List> friendsList = [];
   List<int> requestList = [];
-  List<String> friendListAnalysisList = [];
   List<String> requestListAnalysisList = [];
-  int longestFriendListvalue = 0;
+  List<String> phoneNumberList = [];
+
   int longestRequestListValue = 0;
   late User currentUser =
       User(" ", " ", " ", " ", 0, [], [], [], [], [], "", false, false, []);
@@ -58,7 +57,6 @@ class MainFriendScreenState extends State<MainFriendScreen> {
     Map data = Data.value as Map;
     List friends = [];
     List friendRequests = [];
-    List LocationSharingPeople = [];
     List friendRequestsPending = [];
     List location = [];
     List numberList = [];
@@ -66,7 +64,6 @@ class MainFriendScreenState extends State<MainFriendScreen> {
     if (phoneNumber[0] != "+") {
       phoneNumber = "+1" + phoneNumber;
     }
-
     if (data.containsKey("friends")) {
       friends.addAll(data["friends"]);
     }
@@ -165,31 +162,6 @@ class MainFriendScreenState extends State<MainFriendScreen> {
       setState(() {
         allusers.addAll(users);
       });
-      for (int i = 0; i < currentUser.friendRequests.length; i++) {
-        for (int j = 0; j < allusers.length; j++) {
-          if (allusers[j].phoneNumber == currentUser.friendRequests[i][1]) {
-            friendsList.add([currentUser.friendRequests[i][0], j]);
-            friendListAnalysisList
-                .add(users[j].firstName + " " + users[j].lastName);
-            break;
-          }
-        }
-      }
-      for (int i = 0; i < friendListAnalysisList.length; i++) {
-        if (friendListAnalysisList[i].length > longestFriendListvalue) {
-          longestFriendListvalue = friendListAnalysisList[i].length;
-          print(friendListAnalysisList[i]);
-          print("this is longrestFriendValye");
-          print(longestFriendListvalue);
-        }
-      }
-      for (int i = 0; i < friendListAnalysisList.length; i++) {
-        for (int j = friendListAnalysisList[i].length;
-            j < longestFriendListvalue;
-            j++) {
-          friendListAnalysisList[i] = friendListAnalysisList[i] + " ";
-        }
-      }
       setState(() {
         friendsList;
       });
@@ -201,6 +173,7 @@ class MainFriendScreenState extends State<MainFriendScreen> {
             print(users[j].firstName + users[j].lastName);
             requestListAnalysisList
                 .add(users[j].firstName + " " + users[j].lastName);
+            phoneNumberList.add(users[j].phoneNumber);
             break;
           }
         }
@@ -218,7 +191,6 @@ class MainFriendScreenState extends State<MainFriendScreen> {
           requestListAnalysisList[i] = requestListAnalysisList[i] + " ";
         }
       }
-      print(friendListAnalysisList);
       print(requestListAnalysisList);
       setState(() {
         requestList;
@@ -273,25 +245,15 @@ class MainFriendScreenState extends State<MainFriendScreen> {
                                 List<String> dummy = allDisplayNames;
                                 setState(() {
                                   List tempAns = [];
-                                  if (counter == 1) {
-                                    answer = searchNames(friendListAnalysisList,
-                                        text, longestFriendListvalue + 1, true);
-                                    tempAns.addAll(answer);
-                                    answer = [];
-                                    for (int i = 0; i < tempAns.length; i++) {
-                                      answer.add(friendsList[tempAns[i]]);
-                                    }
-                                  } else {
-                                    answer = searchNames(
-                                        requestListAnalysisList,
-                                        text,
-                                        longestRequestListValue + 1,
-                                        true);
-                                    tempAns.addAll(answer);
-                                    answer = [];
-                                    for (int i = 0; i < tempAns.length; i++) {
-                                      answer.add(requestList[tempAns[i]]);
-                                    }
+
+                                  answer = searchNames(requestListAnalysisList,
+                                      text, longestRequestListValue + 1, true);
+                                  answer.addAll(searchPhoneNumbers(
+                                      phoneNumberList, text));
+                                  tempAns.addAll(answer);
+                                  answer = [];
+                                  for (int i = 0; i < tempAns.length; i++) {
+                                    answer.add(requestList[tempAns[i]]);
                                   }
                                   setState(() {
                                     answer;
@@ -356,161 +318,210 @@ class MainFriendScreenState extends State<MainFriendScreen> {
                       Container(
                           height: widget.height * 0.8,
                           width: widget.width,
-                          child: 
-                               ListView(
-                                  children: [
-                                    ...answer.map((e) {
-                                      Color color = Colors.green;
-
-                                      return Container(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.95,
-                                          height: widget.height * 0.15,
-                                          margin: EdgeInsets.only(
-                                              left: MediaQuery.of(context)
+                          child: ListView(
+                            children: [
+                              ...answer.map((e) {
+                                Color color = Colors.green;
+                                return Container(
+                                    width: MediaQuery.of(context).size.width *
+                                        0.95,
+                                    height: widget.height * 0.15,
+                                    margin: EdgeInsets.only(
+                                        left:
+                                            MediaQuery.of(context).size.width *
+                                                0.025,
+                                        right:
+                                            MediaQuery.of(context).size.width *
+                                                0.025,
+                                        bottom: widget.height * 0.02),
+                                    //   color: Colors.black,
+                                    child: InkWell(
+                                      child: Neumorphic(
+                                        child: Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            SizedBox(
+                                              width: MediaQuery.of(context)
                                                       .size
                                                       .width *
-                                                  0.025,
-                                              right: MediaQuery.of(context)
-                                                      .size
-                                                      .width *
-                                                  0.025,
-                                              bottom: widget.height * 0.02),
-                                          //   color: Colors.black,
-                                          child: InkWell(
-                                            child: Neumorphic(
-                                              child: Row(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.center,
-                                                children: [
-                                                  SizedBox(
-                                                    width:
-                                                        MediaQuery.of(context)
-                                                                .size
-                                                                .width *
-                                                            0.05,
-                                                  ),
-                                                  Neumorphic(
-                                                    style: NeumorphicStyle(
-                                                        boxShape:
-                                                            NeumorphicBoxShape
-                                                                .circle(),
-                                                        depth: -15,
-                                                        color: Colors
-                                                            .grey.shade300,
-                                                        lightSource:
-                                                            LightSource.topLeft,
-                                                        border:
-                                                            NeumorphicBorder(
-                                                                color: color,
-                                                                width: 5),
-                                                        shape: NeumorphicShape
-                                                            .concave),
-                                                    child: Container(
-                                                        height: widget.height *
-                                                            0.11,
-                                                        width: widget.height *
-                                                            0.11,
-                                                        decoration:
-                                                            const BoxDecoration(
-                                                          borderRadius:
-                                                              BorderRadius.all(
-                                                                  Radius
-                                                                      .circular(
-                                                                          100)),
-                                                        )),
-                                                  ),
-                                                  SizedBox(
-                                                    width:
-                                                        MediaQuery.of(context)
-                                                                .size
-                                                                .width *
-                                                            0.02,
-                                                  ),
-                                                  Column(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
-                                                    children: [
-                                                      Text(
-                                                        allusers[e]
-                                                            .phoneNumber,
-                                                        style: TextStyle(
-                                                            fontWeight:
-                                                                FontWeight.w700,
-                                                            color: color,
-                                                            fontSize: MediaQuery.of(
-                                                                        context)
-                                                                    .textScaleFactor *
-                                                                25),
-                                                      ),
-                                                      SizedBox(
-                                                        height: widget.height *
-                                                            0.01,
-                                                      ),
-                                                      Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .start,
-                                                        children: [
-                                                          Text(
-                                                            allusers[e]
-                                                                    .firstName +
-                                                                " " +
-                                                                allusers[e]
-                                                                    .lastName,
-                                                            textAlign:
-                                                                TextAlign.left,
-                                                            style: TextStyle(
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w700,
-                                                                color: color,
-                                                                fontSize: MediaQuery.of(
-                                                                            context)
-                                                                        .textScaleFactor *
-                                                                    20),
-                                                          ),
-                                                          SizedBox(
-                                                            width: MediaQuery.of(
-                                                                        context)
-                                                                    .size
-                                                                    .width *
-                                                                0.08,
-                                                          )
-                                                        ],
-                                                      ),
-                                                    ],
-                                                  )
-                                                ],
-                                              ),
+                                                  0.05,
+                                            ),
+                                            Neumorphic(
                                               style: NeumorphicStyle(
                                                   boxShape: NeumorphicBoxShape
-                                                      .roundRect(
-                                                          const BorderRadius
-                                                                  .all(
-                                                              Radius.circular(
-                                                                  45))),
-                                                  depth: 15,
+                                                      .circle(),
+                                                  depth: -15,
                                                   color: Colors.grey.shade300,
                                                   lightSource:
                                                       LightSource.topLeft,
+                                                  border: NeumorphicBorder(
+                                                      color: color, width: 5),
                                                   shape:
                                                       NeumorphicShape.concave),
+                                              child: currentUser.image == ""
+                                                  ? CircleAvatar(
+                                                      radius: widget.height *
+                                                          (0.11 / 2),
+                                                      backgroundColor:
+                                                          Colors.grey.shade300,
+                                                      child: NeumorphicIcon(
+                                                        Icons.tag_faces,
+                                                        size: widget.textSize *
+                                                            70,
+                                                        style: NeumorphicStyle(
+                                                            color: color),
+                                                      ),
+                                                    )
+                                                  : CircleAvatar(
+                                                      radius: widget.height *
+                                                          (0.11 / 2),
+                                                      backgroundImage:
+                                                          NetworkImage(
+                                                              currentUser
+                                                                  .image),
+                                                    ),
                                             ),
-                                          ));
-                                    }).toList()
-                                    //=> Text(allusers[e[1]].phoneNumber)
-                                  ],
-                                )),
+                                            SizedBox(
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  0.02,
+                                            ),
+                                            Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Text(
+                                                  allusers[e].phoneNumber,
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.w700,
+                                                      color: color,
+                                                      fontSize: MediaQuery.of(
+                                                                  context)
+                                                              .textScaleFactor *
+                                                          25),
+                                                ),
+                                                SizedBox(
+                                                  height: widget.height * 0.01,
+                                                ),
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      allusers[e].firstName +
+                                                          " " +
+                                                          allusers[e].lastName,
+                                                      textAlign: TextAlign.left,
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.w700,
+                                                          color: color,
+                                                          fontSize: MediaQuery.of(
+                                                                      context)
+                                                                  .textScaleFactor *
+                                                              20),
+                                                    ),
+                                                    SizedBox(
+                                                      width:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width *
+                                                              0.08,
+                                                    )
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                            SizedBox(
+                                                width: widget.width * 0.009),
+                                            AnimatedSwitcher(
+                                              duration: Duration(seconds: 60),
+                                              transitionBuilder: (Widget child,
+                                                      Animation<double>
+                                                          animation) =>
+                                                  FadeTransition(
+                                                      opacity: animation,
+                                                      child: child),
+                                              child: currentUser
+                                                          .LocationSharingPeople
+                                                      .contains(allusers[e]
+                                                          .phoneNumber)
+                                                  ? InkWell(
+                                                      onTap: () async {
+                                                        setState(() => currentUser
+                                                                .LocationSharingPeople
+                                                            .remove(allusers[e]
+                                                                .phoneNumber));
+                                                        print(currentUser
+                                                            .LocationSharingPeople);
+                                                        await FirebaseDatabase
+                                                            .instance
+                                                            .ref("User")
+                                                            .child(currentUser
+                                                                .phoneNumber)
+                                                            .child(
+                                                                "locationSharingPeople")
+                                                            .set(currentUser
+                                                                .LocationSharingPeople);
+                                                      },
+                                                      child: Icon(
+                                                        Icons.location_on,
+                                                        size: widget.textSize *
+                                                            60,
+                                                        color: Colors.lightGreen
+                                                            .shade700,
+                                                      ),
+                                                    )
+                                                  : InkWell(
+                                                      child: Icon(
+                                                        Icons.location_off,
+                                                        size: widget.textSize *
+                                                            60,
+                                                        color:
+                                                            Colors.red.shade600,
+                                                      ),
+                                                      onTap: () async {
+                                                        setState(() => currentUser
+                                                                .LocationSharingPeople
+                                                            .add(allusers[e]
+                                                                .phoneNumber));
+                                                        await FirebaseDatabase
+                                                            .instance
+                                                            .ref("User")
+                                                            .child(currentUser
+                                                                .phoneNumber)
+                                                            .child(
+                                                                "locationSharingPeople")
+                                                            .set(currentUser
+                                                                .LocationSharingPeople);
+                                                      },
+                                                    ),
+                                            ),
+                                          ],
+                                        ),
+                                        style: NeumorphicStyle(
+                                            boxShape:
+                                                NeumorphicBoxShape.roundRect(
+                                                    const BorderRadius.all(
+                                                        Radius.circular(45))),
+                                            depth: 15,
+                                            color: Colors.grey.shade300,
+                                            lightSource: LightSource.topLeft,
+                                            shape: NeumorphicShape.concave),
+                                      ),
+                                    ));
+                              }).toList()
+                              //=> Text(allusers[e[1]].phoneNumber)
+                            ],
+                          )),
                     ],
                   ),
                 )
               ],
             ),
-         
           ],
         ));
   }

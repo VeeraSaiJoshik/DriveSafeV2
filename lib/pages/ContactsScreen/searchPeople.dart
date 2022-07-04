@@ -35,6 +35,7 @@ class _searchPeopleState extends State<searchPeople> {
   List location = [];
   List numberList = [];
   List chosenNumber = [];
+  List<String> phoneNumberSearchList = [];
   late User currentUser =
       User(" ", " ", " ", " ", 0, [], [], [], [], [], "", false, false, []);
   late List<User> allusers = [];
@@ -152,6 +153,7 @@ class _searchPeopleState extends State<searchPeople> {
         for (int i = 0; i < allusers.length; i++) {
           allDisplayNames
               .add(allusers[i].firstName + " " + allusers[i].lastName);
+          phoneNumberSearchList.add(allusers[i].phoneNumber);
         }
         tempList2.addAll(allDisplayNames);
         for (int k = 0; k < tempList2.length; k++) {
@@ -210,10 +212,10 @@ class _searchPeopleState extends State<searchPeople> {
                         onChanged: (text) {
                           List<String> dummy = allDisplayNames;
                           flag = true;
-                          setState(() {
-                            answer =
-                                searchNames(tempList2, text, highest, flag);
-                          });
+                          answer = searchNames(tempList2, text, highest, flag);
+                          answer.addAll(
+                              searchPhoneNumbers(phoneNumberSearchList, text));
+                          setState(() {});
                         },
                         decoration: InputDecoration(
                             prefixIcon: Padding(
@@ -467,11 +469,11 @@ class _searchPeopleState extends State<searchPeople> {
                                                         "friendRequestsPending")
                                                     .get();
                                             List tempFriendList = [];
-                                            if(requestUserData.value != null){
-                                            List requestUserFinalData =
-                                                requestUserData.value as List;
-                                            tempFriendList
-                                                .addAll(requestUserFinalData);
+                                            if (requestUserData.value != null) {
+                                              List requestUserFinalData =
+                                                  requestUserData.value as List;
+                                              tempFriendList
+                                                  .addAll(requestUserFinalData);
                                             }
                                             tempFriendList
                                                 .add(appUser.phoneNumber);
@@ -500,22 +502,33 @@ class _searchPeopleState extends State<searchPeople> {
                                           0.05,
                                     ),
                                     Neumorphic(
-                                      style: NeumorphicStyle(
-                                          boxShape: NeumorphicBoxShape.circle(),
-                                          depth: -15,
-                                          color: Colors.grey.shade300,
-                                          lightSource: LightSource.topLeft,
-                                          border: NeumorphicBorder(
-                                              color: color, width: 5),
-                                          shape: NeumorphicShape.concave),
-                                      child: Container(
-                                          height: widget.height * 0.11,
-                                          width: widget.height * 0.11,
-                                          decoration: const BoxDecoration(
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(100)),
-                                          )),
-                                    ),
+                                        style: NeumorphicStyle(
+                                            boxShape:
+                                                NeumorphicBoxShape.circle(),
+                                            depth: -15,
+                                            color: Colors.grey.shade300,
+                                            lightSource: LightSource.topLeft,
+                                            border: NeumorphicBorder(
+                                                color: color, width: 5),
+                                            shape: NeumorphicShape.concave),
+                                        child: currentUser.image == ""
+                                            ? CircleAvatar(
+                                                radius:
+                                                    widget.height * (0.11 / 2),
+                                                backgroundColor:
+                                                    Colors.grey.shade300,
+                                                child: NeumorphicIcon(
+                                                  Icons.tag_faces,
+                                                  size: textSize * 70,
+                                                  style: NeumorphicStyle(
+                                                      color: color),
+                                                ),
+                                              )
+                                            : CircleAvatar(
+                                                radius: widget.height * 0.11,
+                                                backgroundImage: NetworkImage(
+                                                    currentUser.image),
+                                              )),
                                     SizedBox(
                                       width: MediaQuery.of(context).size.width *
                                           0.02,

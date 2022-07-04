@@ -35,6 +35,7 @@ class errorDelivery {
 class _SignUpScreenState extends State<SignUpScreen> {
   late XFile? _image;
   bool haveChosen = false;
+  String error = "";
   Future _getImage() async {
     XFile? image = await ImagePicker().pickImage(source: ImageSource.gallery);
     setState(() {
@@ -154,7 +155,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     String fullName;
     double textSize = MediaQuery.of(context).textScaleFactor;
     Color mainColor = Colors.grey.shade300;
-
+    Color theTextFieldMainColor = Colors.blue;
     return Scaffold(
       backgroundColor: Colors.grey.shade300,
       body: Center(
@@ -245,68 +246,28 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                                 fontSize: textSize * 20,
                                                 color: Colors.orangeAccent),
                                             btnOkOnPress: () {
-                                              AwesomeDialog(
-                                                context: context,
-                                                dialogType:
-                                                    DialogType.INFO_REVERSED,
-                                                animType: AnimType.SCALE,
-                                                headerAnimationLoop: false,
-                                                desc:
-                                                    "Please enter the 5 digit code sent to your phone number",
-                                                body: Column(
-                                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                                  children: [
-                                                  Text("Verification",
-                                                      style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.w700,
-                                                        fontFamily: "Nunito",
-                                                        fontSize: textSize * 25,
-                                                        color: Colors.blue,
-                                                      )),
-                                                  Text(
-                                                      "Please enter the 5 digit code sent to your phone number",
-                                                      textAlign: TextAlign.center,
-                                                      style: TextStyle(
-                                                          fontFamily: "blue",
-                                                          fontSize:
-                                                              textSize * 20,
-                                                          color: Colors.blue)),
-
-                                                  Container(
-                                                    width: MediaQuery.of(context).size.width * 0.5,
-                                                    height: MediaQuery.of(context).size.height * 0.1
-                                                  )
-                                                ]),
-                                               
-                                                btnOkOnPress: () {},
-                                                btnOkIcon: Icons.verified_sharp,
-                                                btnOkColor: Colors.green,
-                                                btnCancelOnPress: () {},
-                                                btnCancelIcon: Icons.cancel,
-                                                btnCancelColor: Colors.red,
-                                              ).show();
-                                              /*  User newUser = User(
-                                                  firstNameController.text,
-                                                  lastNameController.text,
-                                                  phoneNumberController.text,
-                                                  passwordController.text,
-                                                  ageValue.toInt(),
-                                                  [],
-                                                  [],
-                                                  [],
-                                                  [],
-                                                  [],
-                                                  "",
-                                                  false,
-                                                  false,
-                                                  [], );
+                                              User newUser = User(
+                                                firstNameController.text,
+                                                lastNameController.text,
+                                                phoneNumberController.text,
+                                                passwordController.text,
+                                                ageValue.toInt(),
+                                                [],
+                                                [],
+                                                [],
+                                                [],
+                                                [],
+                                                "",
+                                                false,
+                                                false,
+                                                [],
+                                              );
                                               Navigator.push(
                                                   context,
                                                   MaterialPageRoute(
                                                       builder: (context) =>
                                                           SignUpLoadScreenWithImage(
-                                                              newUser)));*/
+                                                              newUser)));
                                             },
                                             btnOkText: "Yes",
                                             btnOkColor: Colors.green,
