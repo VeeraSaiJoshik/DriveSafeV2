@@ -31,7 +31,8 @@ class _FriendScreenState extends State<FriendScreen> {
     List<Widget> pageList = [
       MainFriendScreen(
           height - 60, width, textEditingController2, textSize, currentUser),
-      PhoneNumberScreen(),
+      PhoneNumberScreen(
+          height - 60, width, textEditingController2, textSize, currentUser),
       searchPeople(
           height - 60, width, textEditingController, textSize, currentUser),
       FriendsScreen(

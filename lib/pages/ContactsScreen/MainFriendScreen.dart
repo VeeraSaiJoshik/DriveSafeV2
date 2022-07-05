@@ -221,210 +221,196 @@ class MainFriendScreenState extends State<MainFriendScreen> {
         width: widget.width,
         child: Stack(
           children: [
-            Column(
-              children: [
-                SizedBox(
-                  height: widget.height * 0.07,
-                ),
-                Container(
-                  height: widget.height * 0.08,
-                  width: widget.width * 0.95,
-                  child: Row(
-                    children: [
-                      Neumorphic(
-                        child: Container(
-                            width: widget.width * 0.95,
-                            child: TextField(
-                              textAlignVertical: TextAlignVertical.center,
-                              style: TextStyle(
-                                  fontSize: widget.textSize * 30,
-                                  fontWeight: FontWeight.w700,
-                                  color: Colors.blue),
-                              textAlign: TextAlign.center,
-                              onChanged: (text) {
-                                flag = true;
-                                List<String> dummy = allDisplayNames;
-                                setState(() {
-                                  List tempAns = [];
-
-                                  answer = searchNames(requestListAnalysisList,
-                                      text, longestRequestListValue + 1, true);
-                                  if (allusers.length == answer.length ||
-                                      answer.isEmpty) {
-                                    if (text != "") {
-                                      answer = [];
-                                      print(searchPhoneNumbers(
-                                          phoneNumberList, text, flag));
-                                      answer.addAll(searchPhoneNumbers(
-                                          phoneNumberList, text, flag));
-                                      print(answer);
-                                    }
-                                  }
-                                  tempAns.addAll(answer);
-                                  answer = [];
-                                  for (int i = 0; i < tempAns.length; i++) {
-                                    answer.add(requestList[tempAns[i]]);
-                                  }
-                                  setState(() {
-                                    answer;
-                                  });
-                                  print(longestRequestListValue);
-                                  print(text);
-                                  print(requestListAnalysisList);
-                                  print(answer);
-                                });
-                              },
-                              decoration: InputDecoration(
-                                  prefixIcon: Padding(
-                                    padding: EdgeInsets.only(
-                                        left: widget.width * 0.03),
-                                    child: IconButton(
-                                      icon: Icon(Icons.arrow_back_ios),
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                      },
-                                      color: Colors.blue,
-                                      iconSize: widget.textSize * 40,
-                                    ),
-                                  ),
-                                  suffixIcon: Padding(
-                                    padding: EdgeInsets.only(
-                                        right: widget.width * 0.03),
-                                    child: IconButton(
-                                      icon: Icon(CupertinoIcons.search),
-                                      color: Colors.blue,
-                                      iconSize: widget.textSize * 40,
-                                      onPressed: () {},
-                                    ),
-                                  ),
-                                  border: const OutlineInputBorder(
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(100))),
-                                  contentPadding: EdgeInsets.only(
-                                    bottom: widget.height * 0.01,
-                                    top: widget.height * 0.01,
-                                    left: 0,
-                                  )),
-                              controller: widget.textEditingController,
-                            )),
-                        style: NeumorphicStyle(
-                            boxShape: NeumorphicBoxShape.roundRect(
-                                const BorderRadius.all(Radius.circular(100))),
-                            depth: 15,
-                            color: Colors.grey.shade300,
-                            border:
-                                NeumorphicBorder(color: Colors.blue, width: 3),
-                            lightSource: LightSource.topLeft,
-                            shape: NeumorphicShape.concave),
-                      ),
-                    ],
+            SingleChildScrollView(
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: widget.height * 0.07,
                   ),
-                ),
-                Container(
-                  width: widget.width,
-                  height: widget.height * 0.8,
-                  child: Column(
-                    children: [
-                      Container(
-                          height: widget.height * 0.8,
-                          width: widget.width,
-                          child: ListView(
-                            children: [
-                              ...answer.map((e) {
-                                Color color = Colors.green;
-                                return Container(
-                                    width: MediaQuery.of(context).size.width *
-                                        0.95,
-                                    height: widget.height * 0.15,
-                                    margin: EdgeInsets.only(
-                                        left:
-                                            MediaQuery.of(context).size.width *
-                                                0.025,
-                                        right:
-                                            MediaQuery.of(context).size.width *
-                                                0.025,
-                                        bottom: widget.height * 0.02),
-                                    //   color: Colors.black,
-                                    child: InkWell(
-                                      child: Neumorphic(
-                                        child: Row(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: [
-                                            SizedBox(
-                                              width: MediaQuery.of(context)
-                                                      .size
-                                                      .width *
-                                                  0.05,
-                                            ),
-                                            Neumorphic(
-                                              style: NeumorphicStyle(
-                                                  boxShape: NeumorphicBoxShape
-                                                      .circle(),
-                                                  depth: -15,
-                                                  color: Colors.grey.shade300,
-                                                  lightSource:
-                                                      LightSource.topLeft,
-                                                  border: NeumorphicBorder(
-                                                      color: color, width: 5),
-                                                  shape:
-                                                      NeumorphicShape.concave),
-                                              child: currentUser.image == ""
-                                                  ? CircleAvatar(
-                                                      radius: widget.height *
-                                                          (0.11 / 2),
-                                                      backgroundColor:
-                                                          Colors.grey.shade300,
-                                                      child: NeumorphicIcon(
-                                                        Icons.tag_faces,
-                                                        size: widget.textSize *
-                                                            70,
-                                                        style: NeumorphicStyle(
-                                                            color: color),
-                                                      ),
-                                                    )
-                                                  : CircleAvatar(
-                                                      radius: widget.height *
-                                                          (0.11 / 2),
-                                                      backgroundImage:
-                                                          NetworkImage(
-                                                              currentUser
-                                                                  .image),
-                                                    ),
-                                            ),
-                                            SizedBox(
-                                              width: MediaQuery.of(context)
-                                                      .size
-                                                      .width *
-                                                  0.02,
-                                            ),
-                                            Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                Text(
-                                                  allusers[e].phoneNumber,
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.w700,
-                                                      color: color,
-                                                      fontSize: MediaQuery.of(
-                                                                  context)
-                                                              .textScaleFactor *
-                                                          25),
+                  Container(
+                    height: widget.height * 0.08,
+                    width: widget.width * 0.95,
+                    child: Row(
+                      children: [
+                        Neumorphic(
+                          child: Container(
+                              width: widget.width * 0.95,
+                              child: TextField(
+                                textAlignVertical: TextAlignVertical.center,
+                                style: TextStyle(
+                                    fontSize: widget.textSize * 30,
+                                    fontWeight: FontWeight.w700,
+                                    color: Colors.blue),
+                                textAlign: TextAlign.center,
+                                onChanged: (text) {
+                                  flag = true;
+                                  List<String> dummy = allDisplayNames;
+                                  setState(() {
+                                    List tempAns = [];
+
+                                    answer = searchNames(requestListAnalysisList,
+                                        text, longestRequestListValue + 1, true);
+                                    if (allusers.length == answer.length ||
+                                        answer.isEmpty) {
+                                      if (text != "") {
+                                        answer = [];
+                                        print(searchPhoneNumbers(
+                                            phoneNumberList, text, flag));
+                                        answer.addAll(searchPhoneNumbers(
+                                            phoneNumberList, text, flag));
+                                        print(answer);
+                                      }
+                                    }
+                                    tempAns.addAll(answer);
+                                    answer = [];
+                                    for (int i = 0; i < tempAns.length; i++) {
+                                      answer.add(requestList[tempAns[i]]);
+                                    }
+                                    setState(() {
+                                      answer;
+                                    });
+                                    print(longestRequestListValue);
+                                    print(text);
+                                    print(requestListAnalysisList);
+                                    print(answer);
+                                  });
+                                },
+                                decoration: InputDecoration(
+                                    prefixIcon: Padding(
+                                      padding: EdgeInsets.only(
+                                          left: widget.width * 0.03),
+                                      child: IconButton(
+                                        icon: Icon(Icons.arrow_back_ios),
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        color: Colors.blue,
+                                        iconSize: widget.textSize * 40,
+                                      ),
+                                    ),
+                                    suffixIcon: Padding(
+                                      padding: EdgeInsets.only(
+                                          right: widget.width * 0.03),
+                                      child: IconButton(
+                                        icon: Icon(CupertinoIcons.search),
+                                        color: Colors.blue,
+                                        iconSize: widget.textSize * 40,
+                                        onPressed: () {},
+                                      ),
+                                    ),
+                                    border: const OutlineInputBorder(
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(100))),
+                                    contentPadding: EdgeInsets.only(
+                                      bottom: widget.height * 0.01,
+                                      top: widget.height * 0.01,
+                                      left: 0,
+                                    )),
+                                controller: widget.textEditingController,
+                              )),
+                          style: NeumorphicStyle(
+                              boxShape: NeumorphicBoxShape.roundRect(
+                                  const BorderRadius.all(Radius.circular(100))),
+                              depth: 15,
+                              color: Colors.grey.shade300,
+                              border:
+                                  NeumorphicBorder(color: Colors.blue, width: 3),
+                              lightSource: LightSource.topLeft,
+                              shape: NeumorphicShape.concave),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    width: widget.width,
+                    height: widget.height * 0.8,
+                    child: Column(
+                      children: [
+                        Container(
+                            height: widget.height * 0.8,
+                            width: widget.width,
+                            child: ListView(
+                              children: [
+                                ...answer.map((e) {
+                                  Color color = Colors.green;
+                                  return Container(
+                                      width: MediaQuery.of(context).size.width *
+                                          0.95,
+                                      height: widget.height * 0.15,
+                                      margin: EdgeInsets.only(
+                                          left:
+                                              MediaQuery.of(context).size.width *
+                                                  0.025,
+                                          right:
+                                              MediaQuery.of(context).size.width *
+                                                  0.025,
+                                          bottom: widget.height * 0.02),
+                                      //   color: Colors.black,
+                                      child: InkWell(
+                                        child: Neumorphic(
+                                          child: Row(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Container(
+                                                  child: Row(children: [
+                                                SizedBox(
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width *
+                                                      0.05,
+                                                ),
+                                                Neumorphic(
+                                                  style: NeumorphicStyle(
+                                                      boxShape: NeumorphicBoxShape
+                                                          .circle(),
+                                                      depth: -15,
+                                                      color: Colors.grey.shade300,
+                                                      lightSource:
+                                                          LightSource.topLeft,
+                                                      border: NeumorphicBorder(
+                                                          color: color, width: 5),
+                                                      shape: NeumorphicShape
+                                                          .concave),
+                                                  child: currentUser.image == ""
+                                                      ? CircleAvatar(
+                                                          radius: widget.height *
+                                                              (0.11 / 2),
+                                                          backgroundColor: Colors
+                                                              .grey.shade300,
+                                                          child: NeumorphicIcon(
+                                                            Icons.tag_faces,
+                                                            size:
+                                                                widget.textSize *
+                                                                    70,
+                                                            style:
+                                                                NeumorphicStyle(
+                                                                    color: color),
+                                                          ),
+                                                        )
+                                                      : CircleAvatar(
+                                                          radius: widget.height *
+                                                              (0.11 / 2),
+                                                          backgroundImage:
+                                                              NetworkImage(
+                                                                  currentUser
+                                                                      .image),
+                                                        ),
                                                 ),
                                                 SizedBox(
-                                                  height: widget.height * 0.01,
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width *
+                                                      0.02,
                                                 ),
-                                                Row(
+                                                Column(
                                                   mainAxisAlignment:
-                                                      MainAxisAlignment.start,
+                                                      MainAxisAlignment.center,
                                                   children: [
                                                     Text(
-                                                      allusers[e].firstName +
-                                                          " " +
-                                                          allusers[e].lastName,
-                                                      textAlign: TextAlign.left,
+                                                      allusers[e].phoneNumber,
                                                       style: TextStyle(
                                                           fontWeight:
                                                               FontWeight.w700,
@@ -432,105 +418,158 @@ class MainFriendScreenState extends State<MainFriendScreen> {
                                                           fontSize: MediaQuery.of(
                                                                       context)
                                                                   .textScaleFactor *
-                                                              20),
+                                                              25),
+                                                    ),
+                                                    SizedBox(
+                                                      height:
+                                                          widget.height * 0.01,
+                                                    ),
+                                                    Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment.start,
+                                                      children: [
+                                                        Text(
+                                                          allusers[e].firstName +
+                                                              " " +
+                                                              allusers[e]
+                                                                  .lastName,
+                                                          textAlign:
+                                                              TextAlign.left,
+                                                          style: TextStyle(
+                                                              fontWeight:
+                                                                  FontWeight.w700,
+                                                              color: color,
+                                                              fontSize: MediaQuery.of(
+                                                                          context)
+                                                                      .textScaleFactor *
+                                                                  20),
+                                                        ),
+                                                        SizedBox(
+                                                          width: MediaQuery.of(
+                                                                      context)
+                                                                  .size
+                                                                  .width *
+                                                              0.08,
+                                                        )
+                                                      ],
+                                                    ),
+                                                  ],
+                                                ),
+                                              ])),
+                                              Container(
+                                                child: Row(
+                                                  children: [
+                                                    AnimatedSwitcher(
+                                                      duration:
+                                                          Duration(seconds: 10),
+                                                      transitionBuilder: (Widget
+                                                                  child,
+                                                              Animation<double>
+                                                                  animation) =>
+                                                          FadeTransition(
+                                                              opacity: animation,
+                                                              child: child),
+                                                      child: currentUser
+                                                                  .LocationSharingPeople
+                                                              .contains(allusers[
+                                                                      e]
+                                                                  .phoneNumber)
+                                                          ? InkWell(
+                                                              onTap: () async {
+                                                                setState(() => currentUser
+                                                                        .LocationSharingPeople
+                                                                    .remove(allusers[
+                                                                            e]
+                                                                        .phoneNumber));
+                                                                print(currentUser
+                                                                    .LocationSharingPeople);
+                                                                await FirebaseDatabase
+                                                                    .instance
+                                                                    .ref("User")
+                                                                    .child(currentUser
+                                                                        .phoneNumber)
+                                                                    .child(
+                                                                        "locationSharingPeople")
+                                                                    .set(currentUser
+                                                                        .LocationSharingPeople);
+                                                              },
+                                                              child:
+                                                                  NeumorphicIcon(
+                                                                Icons.location_on,
+                                                                size: widget
+                                                                        .textSize *
+                                                                    60,
+                                                                style:
+                                                                    NeumorphicStyle(
+                                                                  color: Colors
+                                                                      .lightGreen
+                                                                      .shade700,
+                                                                ),
+                                                              ),
+                                                            )
+                                                          : InkWell(
+                                                              child:
+                                                                  NeumorphicIcon(
+                                                                Icons
+                                                                    .location_off,
+                                                                size: widget
+                                                                        .textSize *
+                                                                    60,
+                                                                style: NeumorphicStyle(
+                                                                    color: Colors
+                                                                        .red
+                                                                        .shade600),
+                                                              ),
+                                                              onTap: () async {
+                                                                setState(() => currentUser
+                                                                        .LocationSharingPeople
+                                                                    .add(allusers[
+                                                                            e]
+                                                                        .phoneNumber));
+                                                                await FirebaseDatabase
+                                                                    .instance
+                                                                    .ref("User")
+                                                                    .child(currentUser
+                                                                        .phoneNumber)
+                                                                    .child(
+                                                                        "locationSharingPeople")
+                                                                    .set(currentUser
+                                                                        .LocationSharingPeople);
+                                                              },
+                                                            ),
                                                     ),
                                                     SizedBox(
                                                       width:
                                                           MediaQuery.of(context)
                                                                   .size
                                                                   .width *
-                                                              0.08,
-                                                    )
+                                                              0.015,
+                                                    ),
                                                   ],
                                                 ),
-                                              ],
-                                            ),
-                                            SizedBox(
-                                                width: widget.width * 0.009),
-                                            AnimatedSwitcher(
-                                              duration: Duration(seconds: 60),
-                                              transitionBuilder: (Widget child,
-                                                      Animation<double>
-                                                          animation) =>
-                                                  FadeTransition(
-                                                      opacity: animation,
-                                                      child: child),
-                                              child: currentUser
-                                                          .LocationSharingPeople
-                                                      .contains(allusers[e]
-                                                          .phoneNumber)
-                                                  ? InkWell(
-                                                      onTap: () async {
-                                                        setState(() => currentUser
-                                                                .LocationSharingPeople
-                                                            .remove(allusers[e]
-                                                                .phoneNumber));
-                                                        print(currentUser
-                                                            .LocationSharingPeople);
-                                                        await FirebaseDatabase
-                                                            .instance
-                                                            .ref("User")
-                                                            .child(currentUser
-                                                                .phoneNumber)
-                                                            .child(
-                                                                "locationSharingPeople")
-                                                            .set(currentUser
-                                                                .LocationSharingPeople);
-                                                      },
-                                                      child: Icon(
-                                                        Icons.location_on,
-                                                        size: widget.textSize *
-                                                            60,
-                                                        color: Colors.lightGreen
-                                                            .shade700,
-                                                      ),
-                                                    )
-                                                  : InkWell(
-                                                      child: Icon(
-                                                        Icons.location_off,
-                                                        size: widget.textSize *
-                                                            60,
-                                                        color:
-                                                            Colors.red.shade600,
-                                                      ),
-                                                      onTap: () async {
-                                                        setState(() => currentUser
-                                                                .LocationSharingPeople
-                                                            .add(allusers[e]
-                                                                .phoneNumber));
-                                                        await FirebaseDatabase
-                                                            .instance
-                                                            .ref("User")
-                                                            .child(currentUser
-                                                                .phoneNumber)
-                                                            .child(
-                                                                "locationSharingPeople")
-                                                            .set(currentUser
-                                                                .LocationSharingPeople);
-                                                      },
-                                                    ),
-                                            ),
-                                          ],
+                                              ),
+                                            ],
+                                          ),
+                                          style: NeumorphicStyle(
+                                              boxShape:
+                                                  NeumorphicBoxShape.roundRect(
+                                                      const BorderRadius.all(
+                                                          Radius.circular(45))),
+                                              depth: 15,
+                                              color: Colors.grey.shade300,
+                                              lightSource: LightSource.topLeft,
+                                              shape: NeumorphicShape.concave),
                                         ),
-                                        style: NeumorphicStyle(
-                                            boxShape:
-                                                NeumorphicBoxShape.roundRect(
-                                                    const BorderRadius.all(
-                                                        Radius.circular(45))),
-                                            depth: 15,
-                                            color: Colors.grey.shade300,
-                                            lightSource: LightSource.topLeft,
-                                            shape: NeumorphicShape.concave),
-                                      ),
-                                    ));
-                              }).toList()
-                              //=> Text(allusers[e[1]].phoneNumber)
-                            ],
-                          )),
-                    ],
-                  ),
-                )
-              ],
+                                      ));
+                                }).toList()
+                                //=> Text(allusers[e[1]].phoneNumber)
+                              ],
+                            )),
+                      ],
+                    ),
+                  )
+                ],
+              ),
             ),
           ],
         ));
