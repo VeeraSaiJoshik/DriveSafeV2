@@ -1,8 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
+import 'package:contacts_service/contacts_service.dart';
 import '../../models/User.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:firebase_database/firebase_database.dart';
 
 class PhoneNumberScreen extends StatefulWidget {
   double height;
@@ -19,16 +20,129 @@ class PhoneNumberScreen extends StatefulWidget {
 }
 
 class _PhoneNumberScreenState extends State<PhoneNumberScreen> {
-  @override
   int counter = 0;
   int index = 0;
   int highest = 0;
-  late List answer = [];
-  late List<String> tempList2 = [];
+  List<Contact> answer = [];
+  List<Contact> contacts = [];
+  List<Contact> contactFriends = [];
+  List<String> tempList2 = [];
   List<Color> colorList1 = [Colors.blue, Colors.grey.shade300];
   List<Color> colorTextList1 = [Colors.grey.shade300, Colors.blue];
   List<Color> colorList2 = [Colors.grey.shade300, Colors.blue];
   List<Color> colorTextList2 = [Colors.blue, Colors.grey.shade300];
+  List phoneNumberList = [];
+  late User currentUser =
+      User(" ", " ", " ", " ", 0, [], [], [], [], [], "", false, false, []);
+  Future<User> getUserData(String phoneNumber) async {
+    final Data =
+        await FirebaseDatabase.instance.ref("User/" + phoneNumber).get();
+    phoneNumber = phoneNumber.trim();
+    phoneNumber = phoneNumber.replaceAll(" ", "");
+    Map data = Data.value as Map;
+    List friends = [];
+    List friendRequests = [];
+    List LocationSharingPeople = [];
+    List friendRequestsPending = [];
+    List location = [];
+    List numberList = [];
+    List chosenNumber = [];
+    if (phoneNumber[0] != "+") {
+      phoneNumber = "+1" + phoneNumber;
+    }
+
+    if (data.containsKey("friends")) {
+      friends.addAll(data["friends"]);
+    }
+    if (data.containsKey("friendReqeusts")) {
+      friendRequests.addAll(data["friendReqeusts"]);
+    }
+    if (data.containsKey("locationSharingPeople")) {
+      LocationSharingPeople.addAll(data["locationSharingPeople"]);
+    }
+    if (data.containsKey("friendRequestsPending")) {
+      friendRequestsPending.addAll(data["friendRequestsPending"]);
+    }
+    if (data.containsKey("location")) {
+      location.addAll(["location"]);
+    }
+    if (data.containsKey("phoneNumbersChosen")) {
+      chosenNumber.addAll(data["phoneNumbersChosen"]);
+    }
+    return User(
+      data["firstName"],
+      data["lastName"],
+      data["phoneNumber"],
+      data["password"],
+      data["age"],
+      friends,
+      friendRequests,
+      friendRequestsPending,
+      LocationSharingPeople,
+      location,
+      data["image"],
+      data["numberApproved"],
+      data["locationTrackingOn"],
+      chosenNumber,
+    );
+  }
+
+  getAllContacts() async {
+    List<Contact> currentcontacts = await ContactsService.getContacts(
+        withThumbnails: false, iOSLocalizedLabels: true);
+    for (int i = 0; i < currentcontacts.length; i++) {
+      bool flag = false;
+      if (currentcontacts[i].phones != null) {
+        if (currentcontacts[i].phones!.isNotEmpty) {
+          contacts.add(currentcontacts[i]);
+        }
+      } else if (currentcontacts[i].phones!.isEmpty) {
+        continue;
+      } else if (currentUser.numberList
+          .contains(currentcontacts[i].identifier)) {
+        contactFriends.add(currentcontacts[i]);
+      } else {
+        contacts.add(currentcontacts[i]);
+      }
+    }
+    setState(() {
+      contactFriends;
+      currentcontacts;
+      contacts = [];
+      bool galf = false;
+      int val = 0;
+      for (int i = 0; i < currentcontacts.length; i++) {
+        if (!(currentcontacts[i].phones!.isEmpty)) {
+          if (currentcontacts[i].displayName != null) {
+            contacts.add(currentcontacts[i]);
+          }
+        }
+      }
+      answer = contactFriends;
+    });
+  }
+
+  void collectData() async {
+    await getUserData(widget.currentUser.phoneNumber)
+        .then((value) => setState(() => currentUser = value))
+        .whenComplete(() async {
+      await getAllContacts();
+    });
+  }
+
+  void initFunction() async {
+    collectData();
+  }
+
+  void initState() {
+    initFunction();
+    print(contacts);
+    for (int i = 0; i < contacts.length; i++) {
+      print(contacts[i].phones![0].value);
+    }
+    super.initState();
+  }
+
   Widget build(BuildContext context) {
     return Center(
         child: Container(
@@ -108,6 +222,77 @@ class _PhoneNumberScreenState extends State<PhoneNumberScreen> {
                               ),
                             ],
                           ),
+                        ),
+                        Container(
+                          width: widget.width,
+                          height: widget.height * 0.804,
+                          child: Scrollbar(
+                            thickness: 10,
+                            radius: Radius.circular(50),
+                            isAlwaysShown: true,
+                            child: ListView(children: [
+                              ...answer
+                                  .map((user) => Column(
+                                        children: [
+                                          Neumorphic(
+                                            style: NeumorphicStyle(
+                                                boxShape: NeumorphicBoxShape
+                                                    .roundRect(
+                                                        const BorderRadius.all(
+                                                            Radius.circular(
+                                                                45))),
+                                                depth: 15,
+                                                color: Colors.grey.shade300,
+                                                lightSource:
+                                                    LightSource.topLeft,
+                                                shape: NeumorphicShape.concave),
+                                            child: Container(
+                                              alignment: Alignment.center,
+                                              width: widget.width * 0.95,
+                                              height: widget.height * 0.16,
+                                              color: Colors.grey.shade300,
+                                              child: Row(
+                                                children: [
+                                                  user.avatar == null
+                                                      ? Neumorphic(
+                                                          style: const NeumorphicStyle(
+                                                              boxShape:
+                                                                  NeumorphicBoxShape
+                                                                      .circle(),
+                                                              border: NeumorphicBorder(
+                                                                  width: 5,
+                                                                  color: Colors
+                                                                      .blue),
+                                                              depth: -10),
+                                                          child: CircleAvatar(
+                                                              radius: widget
+                                                                      .height *
+                                                                  0.065,
+                                                              backgroundColor:
+                                                                  Colors.grey
+                                                                      .shade300),
+                                                        )
+                                                      : CircleAvatar(),
+                                                  Text(
+                                                    user.displayName!,
+                                                    style: TextStyle(
+                                                      color: Colors.blue,
+                                                      fontSize:
+                                                          widget.textSize * 25,
+                                                      fontWeight:
+                                                          FontWeight.w700,
+                                                    ),
+                                                  )
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(height: widget.height * 0.02)
+                                        ],
+                                      ))
+                                  .toList()
+                            ]),
+                          ),
                         )
                       ]),
                 ),
@@ -134,47 +319,48 @@ class _PhoneNumberScreenState extends State<PhoneNumberScreen> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 InkWell(
-                                  onTap: () => setState(() {
-                                    counter = 0;
-                                    answer = [];
-                                  }),
-                                  child: Container(
-                                    height: widget.height * (0.06),
-                                    width: widget.width * (0.82 / 2),
-                                    child: Center(
-                                      child: Text("Contact List",
-                                          style: TextStyle(
-                                              color: colorList2[counter],
-                                              fontWeight: FontWeight.w700,
-                                              fontSize: widget.textSize * 20)),
-                                    ),
-                                    decoration: BoxDecoration(
-                                        color: colorList1[counter],
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(100))),
-                                  ),
-                                ),
-                                InkWell(
                                     onTap: () => setState(() {
-                                          counter = 1;
-                                          answer = [];
+                                          counter = 0;
+                                          answer = contactFriends;
+                                          print(counter);
                                         }),
                                     child: Container(
                                       height: widget.height * (0.06),
                                       width: widget.width * (0.82 / 2),
                                       child: Center(
-                                        child: Text("Added Contacts",
+                                        child: Text("Approved",
                                             style: TextStyle(
-                                                color: colorList1[counter],
+                                                color: colorList2[counter],
                                                 fontWeight: FontWeight.w700,
                                                 fontSize:
                                                     widget.textSize * 20)),
                                       ),
                                       decoration: BoxDecoration(
-                                          color: colorList2[counter],
+                                          color: colorList1[counter],
                                           borderRadius: BorderRadius.all(
                                               Radius.circular(100))),
                                     )),
+                                InkWell(
+                                  onTap: () => setState(() {
+                                    counter = 1;
+                                    answer = contacts;
+                                  }),
+                                  child: Container(
+                                    height: widget.height * (0.06),
+                                    width: widget.width * (0.82 / 2),
+                                    child: Center(
+                                      child: Text("All Contacts",
+                                          style: TextStyle(
+                                              color: colorList1[counter],
+                                              fontWeight: FontWeight.w700,
+                                              fontSize: widget.textSize * 20)),
+                                    ),
+                                    decoration: BoxDecoration(
+                                        color: colorList2[counter],
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(100))),
+                                  ),
+                                ),
                               ])),
                       SizedBox(height: widget.height * 0.04)
                     ],

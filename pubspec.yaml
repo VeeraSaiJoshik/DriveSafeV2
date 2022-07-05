@@ -48,6 +48,7 @@ dependencies:
   firebase_storage: ^10.2.18
   curved_navigation_bar: ^1.0.3
   random_names: ^1.0.1
+  contacts_service: ^0.6.3
 
 dev_dependencies:
   flutter_test:
