@@ -282,8 +282,11 @@ class _FriendsScreenState extends State<FriendsScreen> {
                                   setState(() {
                                     List tempAns = [];
                                     if (counter == 1) {
-                                      answer = searchNames(friendListAnalysisList,
-                                          text, longestFriendListvalue + 1, true);
+                                      answer = searchNames(
+                                          friendListAnalysisList,
+                                          text,
+                                          longestFriendListvalue + 1,
+                                          true);
                                       if (allusers.length == answer.length ||
                                           answer.isEmpty) {
                                         if (text != "") {
@@ -367,8 +370,8 @@ class _FriendsScreenState extends State<FriendsScreen> {
                                   const BorderRadius.all(Radius.circular(100))),
                               depth: 15,
                               color: Colors.grey.shade300,
-                              border:
-                                  NeumorphicBorder(color: Colors.blue, width: 3),
+                              border: NeumorphicBorder(
+                                  color: Colors.blue, width: 3),
                               lightSource: LightSource.topLeft,
                               shape: NeumorphicShape.concave),
                         ),
@@ -390,8 +393,9 @@ class _FriendsScreenState extends State<FriendsScreen> {
                                         Color color;
                                         color = Colors.orange;
                                         return Container(
-                                            width:
-                                                MediaQuery.of(context).size.width,
+                                            width: MediaQuery.of(context)
+                                                .size
+                                                .width,
                                             height: widget.height * 0.23,
                                             margin: EdgeInsets.only(
                                                 left: MediaQuery.of(context)
@@ -429,7 +433,8 @@ class _FriendsScreenState extends State<FriendsScreen> {
                                                                     NeumorphicBoxShape
                                                                         .circle(),
                                                                 depth: -15,
-                                                                color: Colors.grey
+                                                                color: Colors
+                                                                    .grey
                                                                     .shade300,
                                                                 lightSource:
                                                                     LightSource
@@ -438,7 +443,8 @@ class _FriendsScreenState extends State<FriendsScreen> {
                                                                     NeumorphicBorder(
                                                                         color:
                                                                             color,
-                                                                        width: 5),
+                                                                        width:
+                                                                            5),
                                                                 shape:
                                                                     NeumorphicShape
                                                                         .concave),
@@ -472,8 +478,7 @@ class _FriendsScreenState extends State<FriendsScreen> {
                                                                         0.11,
                                                                     backgroundImage:
                                                                         NetworkImage(
-                                                                            allusers[e]
-                                                                                .image),
+                                                                            allusers[e].image),
                                                                   )),
                                                         SizedBox(
                                                           width: MediaQuery.of(
@@ -495,15 +500,15 @@ class _FriendsScreenState extends State<FriendsScreen> {
                                                                       FontWeight
                                                                           .w700,
                                                                   color: color,
-                                                                  fontSize: MediaQuery.of(
-                                                                              context)
-                                                                          .textScaleFactor *
-                                                                      25),
+                                                                  fontSize:
+                                                                      MediaQuery.of(context)
+                                                                              .textScaleFactor *
+                                                                          25),
                                                             ),
                                                             SizedBox(
-                                                              height:
-                                                                  widget.height *
-                                                                      0.01,
+                                                              height: widget
+                                                                      .height *
+                                                                  0.01,
                                                             ),
                                                             Row(
                                                               mainAxisAlignment:
@@ -514,7 +519,8 @@ class _FriendsScreenState extends State<FriendsScreen> {
                                                                   allusers[e]
                                                                           .firstName +
                                                                       " " +
-                                                                      allusers[e]
+                                                                      allusers[
+                                                                              e]
                                                                           .lastName,
                                                                   textAlign:
                                                                       TextAlign
@@ -558,26 +564,33 @@ class _FriendsScreenState extends State<FriendsScreen> {
                                                               allusers[e]
                                                                   .phoneNumber,
                                                             );
+                                                            currentUser
+                                                                .numberList
+                                                                .add([
+                                                              allusers[e]
+                                                                  .firstName,
+                                                              allusers[e]
+                                                                  .lastName,
+                                                              allusers[e]
+                                                                  .phoneNumber,
+                                                              allusers[e].image,
+                                                              true
+                                                            ]);
                                                             final currentData =
                                                                 await FirebaseDatabase
                                                                     .instance
                                                                     .ref("User")
                                                                     .get();
                                                             Map currentDataData =
-                                                                currentData.value
+                                                                currentData
+                                                                        .value
                                                                     as Map;
 
                                                             List
                                                                 theSendingFriendData =
                                                                 [];
-                                                            if (currentDataData
-                                                                .containsKey(
-                                                                    "friends")) {
-                                                              theSendingFriendData.addAll(
-                                                                  currentDataData[
-                                                                      "friends"]);
-                                                            }
-                                                            theSendingFriendData
+                                                            currentUser
+                                                                .friends
                                                                 .add(allusers[e]
                                                                     .phoneNumber);
                                                             await FirebaseDatabase
@@ -586,8 +599,8 @@ class _FriendsScreenState extends State<FriendsScreen> {
                                                                 .child(currentUser
                                                                     .phoneNumber)
                                                                 .set({
-                                                              "age":
-                                                                  currentUser.age,
+                                                              "age": currentUser
+                                                                  .age,
                                                               "firstName":
                                                                   currentUser
                                                                       .firstName,
@@ -600,13 +613,14 @@ class _FriendsScreenState extends State<FriendsScreen> {
                                                               "friendRequestsPending":
                                                                   currentUser
                                                                       .friendRequestsPending,
-                                                              "image": currentUser
-                                                                  .image,
+                                                              "image":
+                                                                  currentUser
+                                                                      .image,
                                                               "password":
                                                                   currentUser
                                                                       .password,
                                                               "friends":
-                                                                  theSendingFriendData,
+                                                                  currentUser.friends,
                                                               "location":
                                                                   currentUser
                                                                       .location,
@@ -621,18 +635,22 @@ class _FriendsScreenState extends State<FriendsScreen> {
                                                               "locationTrackingOn":
                                                                   false,
                                                               "phoneNumbersChosen":
-                                                                  []
+                                                                  currentUser
+                                                                      .numberList
                                                             }).whenComplete(
                                                                     () async {
                                                               final finalData =
                                                                   await FirebaseDatabase
                                                                       .instance
-                                                                      .ref("User")
+                                                                      .ref(
+                                                                          "User")
                                                                       .child(currentUser
                                                                           .phoneNumber)
                                                                       .get();
-                                                              Map data = finalData
-                                                                  .value as Map;
+                                                              Map data =
+                                                                  finalData
+                                                                          .value
+                                                                      as Map;
                                                               List temp = [];
                                                               List finalAnswer =
                                                                   [];
@@ -640,7 +658,8 @@ class _FriendsScreenState extends State<FriendsScreen> {
                                                               for (int i = 0;
                                                                   i < temp.length;
                                                                   i++) {
-                                                                if (temp[i][1] !=
+                                                                if (temp[i]
+                                                                        [1] !=
                                                                     currentUser
                                                                         .phoneNumber) {
                                                                   if (temp[i]
@@ -662,14 +681,18 @@ class _FriendsScreenState extends State<FriendsScreen> {
                                                                       "friendReqeusts")
                                                                   .set(
                                                                       finalAnswer);
-                                                              var dataNow1 = await FirebaseDatabase
-                                                                  .instance
-                                                                  .ref("User")
-                                                                  .child(allusers[
-                                                                          e]
-                                                                      .phoneNumber)
-                                                                  .get();
-                                                              Map dataNow = dataNow1.value as Map;
+                                                              var dataNow1 =
+                                                                  await FirebaseDatabase
+                                                                      .instance
+                                                                      .ref(
+                                                                          "User")
+                                                                      .child(allusers[
+                                                                              e]
+                                                                          .phoneNumber)
+                                                                      .get();
+                                                              Map dataNow =
+                                                                  dataNow1.value
+                                                                      as Map;
                                                               print(dataNow);
                                                               if (dataNow
                                                                   .containsKey(
@@ -678,8 +701,9 @@ class _FriendsScreenState extends State<FriendsScreen> {
                                                                 temp2.addAll(
                                                                     dataNow[
                                                                         "friends"]);
-                                                                temp2.add(currentUser
-                                                                    .phoneNumber);
+                                                                temp2.add(
+                                                                    currentUser
+                                                                        .phoneNumber);
                                                                 await FirebaseDatabase
                                                                     .instance
                                                                     .ref("User")
@@ -687,7 +711,8 @@ class _FriendsScreenState extends State<FriendsScreen> {
                                                                             e]
                                                                         .phoneNumber)
                                                                     .update({
-                                                                  "friends": temp2
+                                                                  "friends":
+                                                                      temp2
                                                                 });
                                                               } else {
                                                                 await FirebaseDatabase
@@ -706,8 +731,9 @@ class _FriendsScreenState extends State<FriendsScreen> {
                                                             });
                                                           },
                                                           child: Container(
-                                                            width: widget.width *
-                                                                0.28,
+                                                            width:
+                                                                widget.width *
+                                                                    0.28,
                                                             height:
                                                                 widget.height *
                                                                     0.025,
@@ -717,10 +743,11 @@ class _FriendsScreenState extends State<FriendsScreen> {
                                                                 textAlign:
                                                                     TextAlign
                                                                         .center,
-                                                                style: TextStyle(
-                                                                  fontSize: widget
-                                                                          .textSize *
-                                                                      16,
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontSize:
+                                                                      widget.textSize *
+                                                                          16,
                                                                   fontFamily:
                                                                       "Nunito",
                                                                   fontWeight:
@@ -748,7 +775,8 @@ class _FriendsScreenState extends State<FriendsScreen> {
                                                           onPressed: () async {
                                                             setState((() =>
                                                                 requestList
-                                                                    .remove(e)));
+                                                                    .remove(
+                                                                        e)));
                                                             currentUser
                                                                 .friendRequestsPending
                                                                 .remove(
@@ -761,8 +789,8 @@ class _FriendsScreenState extends State<FriendsScreen> {
                                                                 .child(currentUser
                                                                     .phoneNumber)
                                                                 .set({
-                                                              "age":
-                                                                  currentUser.age,
+                                                              "age": currentUser
+                                                                  .age,
                                                               "firstName":
                                                                   currentUser
                                                                       .firstName,
@@ -775,12 +803,14 @@ class _FriendsScreenState extends State<FriendsScreen> {
                                                               "friendRequestsPending":
                                                                   currentUser
                                                                       .friendRequestsPending,
-                                                              "image": currentUser
-                                                                  .image,
+                                                              "image":
+                                                                  currentUser
+                                                                      .image,
                                                               "password":
                                                                   currentUser
                                                                       .password,
-                                                              "friends": friends,
+                                                              "friends":
+                                                                  friends,
                                                               "location":
                                                                   currentUser
                                                                       .location,
@@ -809,8 +839,10 @@ class _FriendsScreenState extends State<FriendsScreen> {
                                                                 .value as Map;
                                                             print(data);
                                                             List temp = [];
-                                                            List finalAnswer = [];
-                                                            print("before jere");
+                                                            List finalAnswer =
+                                                                [];
+                                                            print(
+                                                                "before jere");
                                                             temp.addAll(data[
                                                                 "friendReqeusts"]);
                                                             for (int i = 0;
@@ -819,13 +851,16 @@ class _FriendsScreenState extends State<FriendsScreen> {
                                                               if (temp[i][1] !=
                                                                   currentUser
                                                                       .phoneNumber) {
-                                                                if (temp[i][0] ==
+                                                                if (temp[i]
+                                                                        [0] ==
                                                                     "pending") {
-                                                                  finalAnswer.add(
-                                                                      temp[i]);
+                                                                  finalAnswer
+                                                                      .add(temp[
+                                                                          i]);
                                                                 }
                                                               } else {
-                                                                finalAnswer.add([
+                                                                finalAnswer
+                                                                    .add([
                                                                   "rejected",
                                                                   currentUser
                                                                       .phoneNumber
@@ -835,15 +870,45 @@ class _FriendsScreenState extends State<FriendsScreen> {
                                                             await FirebaseDatabase
                                                                 .instance
                                                                 .ref("User")
-                                                                .child(allusers[e]
+                                                                .child(allusers[
+                                                                        e]
                                                                     .phoneNumber)
                                                                 .child(
                                                                     "friendReqeusts")
-                                                                .set(finalAnswer);
+                                                                .set(
+                                                                    finalAnswer);
+                                                            List
+                                                                phoneNumberList =
+                                                                allusers[e]
+                                                                    .numberList;
+                                                            for (int i = 0;
+                                                                i <
+                                                                    phoneNumberList
+                                                                        .length;
+                                                                i++) {
+                                                              if (phoneNumberList[
+                                                                  i][2]) {
+                                                                phoneNumberList
+                                                                    .removeAt(
+                                                                        i);
+                                                                break;
+                                                              }
+                                                            }
+                                                            await FirebaseDatabase
+                                                                .instance
+                                                                .ref("User")
+                                                                .child(allusers[
+                                                                        e]
+                                                                    .phoneNumber)
+                                                                .child(
+                                                                    "phoneNumbersChosen")
+                                                                .set(
+                                                                    phoneNumberList);
                                                           },
                                                           child: Container(
-                                                            width: widget.width *
-                                                                0.28,
+                                                            width:
+                                                                widget.width *
+                                                                    0.28,
                                                             height:
                                                                 widget.height *
                                                                     0.025,
@@ -853,10 +918,11 @@ class _FriendsScreenState extends State<FriendsScreen> {
                                                                 textAlign:
                                                                     TextAlign
                                                                         .center,
-                                                                style: TextStyle(
-                                                                  fontSize: widget
-                                                                          .textSize *
-                                                                      16,
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontSize:
+                                                                      widget.textSize *
+                                                                          16,
                                                                   fontFamily:
                                                                       "Nunito",
                                                                   fontWeight:
@@ -895,11 +961,15 @@ class _FriendsScreenState extends State<FriendsScreen> {
                                                     color: Colors.grey.shade300,
                                                     lightSource:
                                                         LightSource.topLeft,
-                                                    shape:
-                                                        NeumorphicShape.concave),
+                                                    shape: NeumorphicShape
+                                                        .concave),
                                               ),
                                             ));
                                       }).toList(),
+                                      SizedBox(
+                                          height: widget.height * 0.2,
+                                          width: widget.width)
+
                                       //=> Text(allusers[e[1]].phoneNumber)
                                     ],
                                   )
@@ -949,7 +1019,8 @@ class _FriendsScreenState extends State<FriendsScreen> {
                                                           color: Colors
                                                               .grey.shade300,
                                                           lightSource:
-                                                              LightSource.topLeft,
+                                                              LightSource
+                                                                  .topLeft,
                                                           border:
                                                               NeumorphicBorder(
                                                                   color: color,
@@ -957,14 +1028,17 @@ class _FriendsScreenState extends State<FriendsScreen> {
                                                           shape: NeumorphicShape
                                                               .concave),
                                                       child:
-                                                          allusers[e[1]].image ==
+                                                          allusers[e[1]]
+                                                                      .image ==
                                                                   ""
                                                               ? CircleAvatar(
                                                                   radius: widget
                                                                           .height *
-                                                                      (0.11 / 2),
+                                                                      (0.11 /
+                                                                          2),
                                                                   backgroundColor:
-                                                                      Colors.grey
+                                                                      Colors
+                                                                          .grey
                                                                           .shade300,
                                                                   child:
                                                                       NeumorphicIcon(
@@ -981,7 +1055,8 @@ class _FriendsScreenState extends State<FriendsScreen> {
                                                               : CircleAvatar(
                                                                   radius: widget
                                                                           .height *
-                                                                      (0.11 / 2),
+                                                                      (0.11 /
+                                                                          2),
                                                                   backgroundImage:
                                                                       NetworkImage(
                                                                           allusers[e[1]]
@@ -1005,7 +1080,8 @@ class _FriendsScreenState extends State<FriendsScreen> {
                                                               .phoneNumber,
                                                           style: TextStyle(
                                                               fontWeight:
-                                                                  FontWeight.w700,
+                                                                  FontWeight
+                                                                      .w700,
                                                               color: color,
                                                               fontSize: MediaQuery.of(
                                                                           context)
@@ -1013,8 +1089,9 @@ class _FriendsScreenState extends State<FriendsScreen> {
                                                                   25),
                                                         ),
                                                         SizedBox(
-                                                          height: widget.height *
-                                                              0.01,
+                                                          height:
+                                                              widget.height *
+                                                                  0.01,
                                                         ),
                                                         Row(
                                                           mainAxisAlignment:
@@ -1028,16 +1105,17 @@ class _FriendsScreenState extends State<FriendsScreen> {
                                                                   allusers[e[1]]
                                                                       .lastName,
                                                               textAlign:
-                                                                  TextAlign.left,
+                                                                  TextAlign
+                                                                      .left,
                                                               style: TextStyle(
                                                                   fontWeight:
                                                                       FontWeight
                                                                           .w700,
                                                                   color: color,
-                                                                  fontSize: MediaQuery.of(
-                                                                              context)
-                                                                          .textScaleFactor *
-                                                                      20),
+                                                                  fontSize:
+                                                                      MediaQuery.of(context)
+                                                                              .textScaleFactor *
+                                                                          20),
                                                             ),
                                                             SizedBox(
                                                               width: MediaQuery.of(
@@ -1063,11 +1141,15 @@ class _FriendsScreenState extends State<FriendsScreen> {
                                                     color: Colors.grey.shade300,
                                                     lightSource:
                                                         LightSource.topLeft,
-                                                    shape:
-                                                        NeumorphicShape.concave),
+                                                    shape: NeumorphicShape
+                                                        .concave),
                                               ),
                                             ));
-                                      }).toList()
+                                      }).toList(),
+                                      SizedBox(
+                                          height: widget.height * 0.2,
+                                          width: widget.width)
+
                                       //=> Text(allusers[e[1]].phoneNumber)
                                     ],
                                   )),

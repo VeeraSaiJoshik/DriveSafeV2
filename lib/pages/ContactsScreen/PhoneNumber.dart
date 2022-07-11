@@ -177,13 +177,19 @@ class _PhoneNumberScreenState extends State<PhoneNumberScreen> {
                             ],
                           ),
                         ),
+                        Container(
+                            width: widget.width,
+                            height: widget.height * 0.80,
+                            child: ListView(
+                              children: [
+                                ...currentUser.numberList.map((e) {
+                                  print(e);
+                                  return Text(e.toString());
+                                }).toList()
+                              ],
+                            ))
                       ]),
                 ),
-                Container(
-                  width: widget.width,
-                  height: widget.height,
-                  
-                )
               ],
             )));
   }

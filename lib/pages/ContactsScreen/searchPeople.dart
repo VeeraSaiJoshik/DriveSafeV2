@@ -287,7 +287,6 @@ class _searchPeopleState extends State<searchPeople> {
                 child: Scrollbar(
                   thickness: 10,
                   radius: Radius.circular(50),
-                  isAlwaysShown: true,
                   child: ListView(
                       padding: EdgeInsets.only(
                           top: MediaQuery.of(context).size.height * 0.02),
@@ -439,8 +438,15 @@ class _searchPeopleState extends State<searchPeople> {
                                                 color: Colors.blueAccent),
                                             btnOkOnPress: () async {
                                               appUser.numberList.add(
+                                                [
+                                                  allusers[userArea].firstName,
+                                                  allusers[userArea].lastName,
                                                   allusers[userArea]
-                                                      .phoneNumber);
+                                                      .phoneNumber,
+                                                  allusers[userArea].image,
+                                                  true,
+                                                ],
+                                              );
                                               String smsMessage = "Hello, this is a bot from the DriveSafe application. We are writing this message to inform you that the phone number " +
                                                   currentUser.phoneNumber +
                                                   ", owned by " +

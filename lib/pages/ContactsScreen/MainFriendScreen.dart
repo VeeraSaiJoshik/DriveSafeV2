@@ -152,6 +152,10 @@ class MainFriendScreenState extends State<MainFriendScreen> {
     return allUserList;
   }
 
+  void goToUserMapPage() async {
+    print("this is the function");
+  }
+
   void collectData() async {
     await getUserData(widget.currentUser.phoneNumber).then((value) {
       setState(() {
@@ -248,8 +252,11 @@ class MainFriendScreenState extends State<MainFriendScreen> {
                                   setState(() {
                                     List tempAns = [];
 
-                                    answer = searchNames(requestListAnalysisList,
-                                        text, longestRequestListValue + 1, true);
+                                    answer = searchNames(
+                                        requestListAnalysisList,
+                                        text,
+                                        longestRequestListValue + 1,
+                                        true);
                                     if (allusers.length == answer.length ||
                                         answer.isEmpty) {
                                       if (text != "") {
@@ -313,8 +320,8 @@ class MainFriendScreenState extends State<MainFriendScreen> {
                                   const BorderRadius.all(Radius.circular(100))),
                               depth: 15,
                               color: Colors.grey.shade300,
-                              border:
-                                  NeumorphicBorder(color: Colors.blue, width: 3),
+                              border: NeumorphicBorder(
+                                  color: Colors.blue, width: 3),
                               lightSource: LightSource.topLeft,
                               shape: NeumorphicShape.concave),
                         ),
@@ -338,12 +345,14 @@ class MainFriendScreenState extends State<MainFriendScreen> {
                                           0.95,
                                       height: widget.height * 0.15,
                                       margin: EdgeInsets.only(
-                                          left:
-                                              MediaQuery.of(context).size.width *
-                                                  0.025,
-                                          right:
-                                              MediaQuery.of(context).size.width *
-                                                  0.025,
+                                          left: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.025,
+                                          right: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.025,
                                           bottom: widget.height * 0.02),
                                       //   color: Colors.black,
                                       child: InkWell(
@@ -364,35 +373,42 @@ class MainFriendScreenState extends State<MainFriendScreen> {
                                                 ),
                                                 Neumorphic(
                                                   style: NeumorphicStyle(
-                                                      boxShape: NeumorphicBoxShape
-                                                          .circle(),
+                                                      boxShape:
+                                                          NeumorphicBoxShape
+                                                              .circle(),
                                                       depth: -15,
-                                                      color: Colors.grey.shade300,
+                                                      color:
+                                                          Colors.grey.shade300,
                                                       lightSource:
                                                           LightSource.topLeft,
                                                       border: NeumorphicBorder(
-                                                          color: color, width: 5),
+                                                          color: color,
+                                                          width: 5),
                                                       shape: NeumorphicShape
                                                           .concave),
                                                   child: currentUser.image == ""
                                                       ? CircleAvatar(
-                                                          radius: widget.height *
-                                                              (0.11 / 2),
-                                                          backgroundColor: Colors
-                                                              .grey.shade300,
+                                                          radius:
+                                                              widget.height *
+                                                                  (0.11 / 2),
+                                                          backgroundColor:
+                                                              Colors.grey
+                                                                  .shade300,
                                                           child: NeumorphicIcon(
                                                             Icons.tag_faces,
-                                                            size:
-                                                                widget.textSize *
-                                                                    70,
+                                                            size: widget
+                                                                    .textSize *
+                                                                70,
                                                             style:
                                                                 NeumorphicStyle(
-                                                                    color: color),
+                                                                    color:
+                                                                        color),
                                                           ),
                                                         )
                                                       : CircleAvatar(
-                                                          radius: widget.height *
-                                                              (0.11 / 2),
+                                                          radius:
+                                                              widget.height *
+                                                                  (0.11 / 2),
                                                           backgroundImage:
                                                               NetworkImage(
                                                                   currentUser
@@ -426,10 +442,12 @@ class MainFriendScreenState extends State<MainFriendScreen> {
                                                     ),
                                                     Row(
                                                       mainAxisAlignment:
-                                                          MainAxisAlignment.start,
+                                                          MainAxisAlignment
+                                                              .start,
                                                       children: [
                                                         Text(
-                                                          allusers[e].firstName +
+                                                          allusers[e]
+                                                                  .firstName +
                                                               " " +
                                                               allusers[e]
                                                                   .lastName,
@@ -437,7 +455,8 @@ class MainFriendScreenState extends State<MainFriendScreen> {
                                                               TextAlign.left,
                                                           style: TextStyle(
                                                               fontWeight:
-                                                                  FontWeight.w700,
+                                                                  FontWeight
+                                                                      .w700,
                                                               color: color,
                                                               fontSize: MediaQuery.of(
                                                                           context)
@@ -467,7 +486,8 @@ class MainFriendScreenState extends State<MainFriendScreen> {
                                                               Animation<double>
                                                                   animation) =>
                                                           FadeTransition(
-                                                              opacity: animation,
+                                                              opacity:
+                                                                  animation,
                                                               child: child),
                                                       child: currentUser
                                                                   .LocationSharingPeople
@@ -495,7 +515,8 @@ class MainFriendScreenState extends State<MainFriendScreen> {
                                                               },
                                                               child:
                                                                   NeumorphicIcon(
-                                                                Icons.location_on,
+                                                                Icons
+                                                                    .location_on,
                                                                 size: widget
                                                                         .textSize *
                                                                     60,
@@ -571,6 +592,37 @@ class MainFriendScreenState extends State<MainFriendScreen> {
                 ],
               ),
             ),
+            SizedBox(
+              height: widget.height,
+              width: widget.width,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  SizedBox(
+                    height: widget.height * 0.88,
+                  ),
+                  Container(
+                    height: widget.width * 0.17,
+                    width: widget.width * 0.17,
+                    margin: EdgeInsets.only(right: widget.width * 0.025),
+                    decoration: const BoxDecoration(
+                        color: Colors.blue,
+                        borderRadius: BorderRadius.all(Radius.circular(100))),
+                    child: Center(
+                      child: InkWell(
+                        onTap: () {
+                        },
+                        child: Icon(
+                          Icons.map,
+                          color: Colors.grey.shade300,
+                          size: widget.textSize * 30,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            )
           ],
         ));
   }
