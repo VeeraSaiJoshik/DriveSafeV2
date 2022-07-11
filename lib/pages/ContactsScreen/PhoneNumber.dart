@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:contacts_service/contacts_service.dart';
 import '../../models/User.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -23,9 +22,6 @@ class _PhoneNumberScreenState extends State<PhoneNumberScreen> {
   int counter = 0;
   int index = 0;
   int highest = 0;
-  List<Contact> answer = [];
-  List<Contact> contacts = [];
-  List<Contact> contactFriends = [];
   List<String> tempList2 = [];
   List<Color> colorList1 = [Colors.blue, Colors.grey.shade300];
   List<Color> colorTextList1 = [Colors.grey.shade300, Colors.blue];
@@ -87,47 +83,9 @@ class _PhoneNumberScreenState extends State<PhoneNumberScreen> {
     );
   }
 
-  getAllContacts() async {
-    List<Contact> currentcontacts = await ContactsService.getContacts(
-        withThumbnails: false, iOSLocalizedLabels: true);
-    for (int i = 0; i < currentcontacts.length; i++) {
-      bool flag = false;
-      if (currentcontacts[i].phones != null) {
-        if (currentcontacts[i].phones!.isNotEmpty) {
-          contacts.add(currentcontacts[i]);
-        }
-      } else if (currentcontacts[i].phones!.isEmpty) {
-        continue;
-      } else if (currentUser.numberList
-          .contains(currentcontacts[i].identifier)) {
-        contactFriends.add(currentcontacts[i]);
-      } else {
-        contacts.add(currentcontacts[i]);
-      }
-    }
-    setState(() {
-      contactFriends;
-      currentcontacts;
-      contacts = [];
-      bool galf = false;
-      int val = 0;
-      for (int i = 0; i < currentcontacts.length; i++) {
-        if (!(currentcontacts[i].phones!.isEmpty)) {
-          if (currentcontacts[i].displayName != null) {
-            contacts.add(currentcontacts[i]);
-          }
-        }
-      }
-      answer = contactFriends;
-    });
-  }
-
   void collectData() async {
     await getUserData(widget.currentUser.phoneNumber)
-        .then((value) => setState(() => currentUser = value))
-        .whenComplete(() async {
-      await getAllContacts();
-    });
+        .then((value) => setState(() => currentUser = value));
   }
 
   void initFunction() async {
@@ -136,10 +94,6 @@ class _PhoneNumberScreenState extends State<PhoneNumberScreen> {
 
   void initState() {
     initFunction();
-    print(contacts);
-    for (int i = 0; i < contacts.length; i++) {
-      print(contacts[i].phones![0].value);
-    }
     super.initState();
   }
 
@@ -223,148 +177,12 @@ class _PhoneNumberScreenState extends State<PhoneNumberScreen> {
                             ],
                           ),
                         ),
-                        Container(
-                          width: widget.width,
-                          height: widget.height * 0.804,
-                          child: Scrollbar(
-                            thickness: 10,
-                            radius: Radius.circular(50),
-                            isAlwaysShown: true,
-                            child: ListView(children: [
-                              ...answer
-                                  .map((user) => Column(
-                                        children: [
-                                          Neumorphic(
-                                            style: NeumorphicStyle(
-                                                boxShape: NeumorphicBoxShape
-                                                    .roundRect(
-                                                        const BorderRadius.all(
-                                                            Radius.circular(
-                                                                45))),
-                                                depth: 15,
-                                                color: Colors.grey.shade300,
-                                                lightSource:
-                                                    LightSource.topLeft,
-                                                shape: NeumorphicShape.concave),
-                                            child: Container(
-                                              alignment: Alignment.center,
-                                              width: widget.width * 0.95,
-                                              height: widget.height * 0.16,
-                                              color: Colors.grey.shade300,
-                                              child: Row(
-                                                children: [
-                                                  user.avatar == null
-                                                      ? Neumorphic(
-                                                          style: const NeumorphicStyle(
-                                                              boxShape:
-                                                                  NeumorphicBoxShape
-                                                                      .circle(),
-                                                              border: NeumorphicBorder(
-                                                                  width: 5,
-                                                                  color: Colors
-                                                                      .blue),
-                                                              depth: -10),
-                                                          child: CircleAvatar(
-                                                              radius: widget
-                                                                      .height *
-                                                                  0.065,
-                                                              backgroundColor:
-                                                                  Colors.grey
-                                                                      .shade300),
-                                                        )
-                                                      : CircleAvatar(),
-                                                  Text(
-                                                    user.displayName!,
-                                                    style: TextStyle(
-                                                      color: Colors.blue,
-                                                      fontSize:
-                                                          widget.textSize * 25,
-                                                      fontWeight:
-                                                          FontWeight.w700,
-                                                    ),
-                                                  )
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                          SizedBox(height: widget.height * 0.02)
-                                        ],
-                                      ))
-                                  .toList()
-                            ]),
-                          ),
-                        )
                       ]),
                 ),
                 Container(
                   width: widget.width,
                   height: widget.height,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Container(
-                          width: widget.width * 0.9,
-                          height: widget.height * 0.07,
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                              border: Border.all(color: Colors.blue, width: 3),
-                              color: Colors.grey.shade300,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(100))),
-                          padding: EdgeInsets.symmetric(
-                              vertical: widget.height * 0.005,
-                              horizontal: widget.width * 0.02),
-                          child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                InkWell(
-                                    onTap: () => setState(() {
-                                          counter = 0;
-                                          answer = contactFriends;
-                                          print(counter);
-                                        }),
-                                    child: Container(
-                                      height: widget.height * (0.06),
-                                      width: widget.width * (0.82 / 2),
-                                      child: Center(
-                                        child: Text("Approved",
-                                            style: TextStyle(
-                                                color: colorList2[counter],
-                                                fontWeight: FontWeight.w700,
-                                                fontSize:
-                                                    widget.textSize * 20)),
-                                      ),
-                                      decoration: BoxDecoration(
-                                          color: colorList1[counter],
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(100))),
-                                    )),
-                                InkWell(
-                                  onTap: () => setState(() {
-                                    counter = 1;
-                                    answer = contacts;
-                                  }),
-                                  child: Container(
-                                    height: widget.height * (0.06),
-                                    width: widget.width * (0.82 / 2),
-                                    child: Center(
-                                      child: Text("All Contacts",
-                                          style: TextStyle(
-                                              color: colorList1[counter],
-                                              fontWeight: FontWeight.w700,
-                                              fontSize: widget.textSize * 20)),
-                                    ),
-                                    decoration: BoxDecoration(
-                                        color: colorList2[counter],
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(100))),
-                                  ),
-                                ),
-                              ])),
-                      SizedBox(height: widget.height * 0.04)
-                    ],
-                  ),
+                  
                 )
               ],
             )));

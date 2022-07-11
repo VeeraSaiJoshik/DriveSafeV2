@@ -40,6 +40,7 @@ class _searchPeopleState extends State<searchPeople> {
       User(" ", " ", " ", " ", 0, [], [], [], [], [], "", false, false, []);
   late List<User> allusers = [];
   bool flag = false;
+
   Future<User> getUserData(String phoneNumber) async {
     phoneNumber = phoneNumber.trim();
     phoneNumber = phoneNumber.replaceAll(" ", "");
@@ -191,7 +192,8 @@ class _searchPeopleState extends State<searchPeople> {
         child: Container(
           height: widget.height,
           width: widget.width,
-          child: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
+          child:
+              Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
             SizedBox(
               height: widget.height * 0.07,
             ),
@@ -215,7 +217,8 @@ class _searchPeopleState extends State<searchPeople> {
                             flag = true;
                             print("=============================");
                             print(allusers.length);
-                            answer = searchNames(tempList2, text, highest, flag);
+                            answer =
+                                searchNames(tempList2, text, highest, flag);
                             print(answer.length);
                             print(tempList2.length);
                             print(text);
@@ -324,7 +327,8 @@ class _searchPeopleState extends State<searchPeople> {
                               width: MediaQuery.of(context).size.width * 0.95,
                               height: widget.height * 0.15,
                               margin: EdgeInsets.only(
-                                  left: MediaQuery.of(context).size.width * 0.025,
+                                  left:
+                                      MediaQuery.of(context).size.width * 0.025,
                                   right:
                                       MediaQuery.of(context).size.width * 0.025,
                                   bottom: widget.height * 0.02),
@@ -419,7 +423,8 @@ class _searchPeopleState extends State<searchPeople> {
                                             title: "Warning",
                                             desc:
                                                 "Are you sure you want to send a friend request to " +
-                                                    allusers[userArea].firstName +
+                                                    allusers[userArea]
+                                                        .firstName +
                                                     " " +
                                                     allusers[userArea].lastName,
                                             titleTextStyle: TextStyle(
@@ -433,10 +438,25 @@ class _searchPeopleState extends State<searchPeople> {
                                                 fontSize: textSize * 20,
                                                 color: Colors.blueAccent),
                                             btnOkOnPress: () async {
+                                              appUser.numberList.add(
+                                                  allusers[userArea]
+                                                      .phoneNumber);
+                                              String smsMessage = "Hello, this is a bot from the DriveSafe application. We are writing this message to inform you that the phone number " +
+                                                  currentUser.phoneNumber +
+                                                  ", owned by " +
+                                                  currentUser.firstName +
+                                                  " " +
+                                                  currentUser.lastName +
+                                                  ", has chosen to send you his location data for safety when he is driving. Whenever Mr." +
+                                                  currentUser.lastName +
+                                                  " starts to drive his car you will recieve data like a link to his current location, his speed, the quality of the roads he is driving on, and other data regarding his safety every 2 or so minutes. If you want more indepth data, like live location updating, then you can download the DriveSafe app to access such data. If you already have downloaded the drive safe app, make sure you accept Mr." +
+                                                  currentUser.firstName +
+                                                  "'s friend request to access data in the app.\n" +
+                                                  "Note : if you reject the user in the app, you will no longer get messages";
                                               for (int k = 0;
                                                   k <
-                                                      appUser
-                                                          .friendRequests.length;
+                                                      appUser.friendRequests
+                                                          .length;
                                                   k++) {
                                                 if (appUser.friendRequests[k]
                                                         [1] ==
@@ -458,38 +478,45 @@ class _searchPeopleState extends State<searchPeople> {
                                                   .update({
                                                 appUser.phoneNumber: {
                                                   "age": appUser.age,
-                                                  "firstName": appUser.firstName,
+                                                  "firstName":
+                                                      appUser.firstName,
                                                   "lastName": appUser.lastName,
                                                   "friendReqeusts":
                                                       appUser.friendRequests,
-                                                  "friendRequestsPending": appUser
-                                                      .friendRequestsPending,
+                                                  "friendRequestsPending":
+                                                      appUser
+                                                          .friendRequestsPending,
                                                   "image": appUser.image,
                                                   "password": appUser.password,
                                                   "friends": appUser.friends,
                                                   "location": appUser.location,
                                                   "phoneNumber":
                                                       appUser.phoneNumber,
-                                                  "locationSharingPeople": appUser
-                                                      .LocationSharingPeople,
+                                                  "locationSharingPeople":
+                                                      appUser
+                                                          .LocationSharingPeople,
                                                   "numberApproved": false,
                                                   "locationTrackingOn": false,
-                                                  "phoneNumbersChosen": []
+                                                  "phoneNumbersChosen":
+                                                      appUser.numberList
                                                 }
                                               });
                                               final requestUserData =
-                                                  await FirebaseDatabase.instance
+                                                  await FirebaseDatabase
+                                                      .instance
                                                       .ref("User/")
                                                       .child(user.phoneNumber)
                                                       .child(
                                                           "friendRequestsPending")
                                                       .get();
                                               List tempFriendList = [];
-                                              if (requestUserData.value != null) {
+                                              if (requestUserData.value !=
+                                                  null) {
                                                 List requestUserFinalData =
-                                                    requestUserData.value as List;
-                                                tempFriendList
-                                                    .addAll(requestUserFinalData);
+                                                    requestUserData.value
+                                                        as List;
+                                                tempFriendList.addAll(
+                                                    requestUserFinalData);
                                               }
                                               tempFriendList
                                                   .add(appUser.phoneNumber);
@@ -511,11 +538,13 @@ class _searchPeopleState extends State<searchPeople> {
                                 },
                                 child: Neumorphic(
                                   child: Row(
-                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
                                     children: [
                                       SizedBox(
-                                        width: MediaQuery.of(context).size.width *
-                                            0.05,
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.05,
                                       ),
                                       Neumorphic(
                                           style: NeumorphicStyle(
@@ -529,8 +558,8 @@ class _searchPeopleState extends State<searchPeople> {
                                               shape: NeumorphicShape.concave),
                                           child: user.image == ""
                                               ? CircleAvatar(
-                                                  radius:
-                                                      widget.height * (0.11 / 2),
+                                                  radius: widget.height *
+                                                      (0.11 / 2),
                                                   backgroundColor:
                                                       Colors.grey.shade300,
                                                   child: NeumorphicIcon(
@@ -548,12 +577,14 @@ class _searchPeopleState extends State<searchPeople> {
                                                     radius: widget.height *
                                                         (0.11 / 2),
                                                     backgroundImage:
-                                                        NetworkImage(user.image),
+                                                        NetworkImage(
+                                                            user.image),
                                                   ),
                                                 )),
                                       SizedBox(
-                                        width: MediaQuery.of(context).size.width *
-                                            0.02,
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.02,
                                       ),
                                       Column(
                                         mainAxisAlignment:
@@ -583,10 +614,10 @@ class _searchPeopleState extends State<searchPeople> {
                                                 style: TextStyle(
                                                     fontWeight: FontWeight.w700,
                                                     color: color,
-                                                    fontSize:
-                                                        MediaQuery.of(context)
-                                                                .textScaleFactor *
-                                                            20),
+                                                    fontSize: MediaQuery.of(
+                                                                context)
+                                                            .textScaleFactor *
+                                                        20),
                                               ),
                                               SizedBox(
                                                 width: MediaQuery.of(context)
