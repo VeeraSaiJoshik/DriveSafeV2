@@ -53,6 +53,10 @@
 	<false/>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string> The app needs the following so that the location data fo the user can be sent to the people the user desires it be sent to </string>
+	<key> UIBackgroundModes </key>
+	<string>location</string>
 	
 </dict>
 </plist>

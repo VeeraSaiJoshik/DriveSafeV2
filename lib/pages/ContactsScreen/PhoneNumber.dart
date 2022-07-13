@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../models/User.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'addPhoneNumberScreen.dart';
 
 class PhoneNumberScreen extends StatefulWidget {
   double height;
@@ -184,12 +185,229 @@ class _PhoneNumberScreenState extends State<PhoneNumberScreen> {
                               children: [
                                 ...currentUser.numberList.map((e) {
                                   print(e);
-                                  return Text(e.toString());
+                                  Color color;
+                                  if (e[4]) {
+                                    color = Colors.blue;
+                                  } else {
+                                    color = Colors.cyan;
+                                  }
+                                  return Container(
+                                      width: MediaQuery.of(context).size.width *
+                                          0.95,
+                                      height: widget.height * 0.15,
+                                      margin: EdgeInsets.only(
+                                          left: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.025,
+                                          right: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.025,
+                                          bottom: widget.height * 0.02),
+                                      child: Neumorphic(
+                                        child: Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            SizedBox(
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  0.05,
+                                            ),
+                                            Neumorphic(
+                                                style: NeumorphicStyle(
+                                                    boxShape: NeumorphicBoxShape
+                                                        .circle(),
+                                                    depth: -15,
+                                                    color: Colors.grey.shade300,
+                                                    lightSource:
+                                                        LightSource.topLeft,
+                                                    border: NeumorphicBorder(
+                                                        color: color, width: 5),
+                                                    shape: NeumorphicShape
+                                                        .concave),
+                                                child: e[3] == "" || e[3] == " "
+                                                    ? CircleAvatar(
+                                                        radius: widget.height *
+                                                            (0.11 / 2),
+                                                        backgroundColor: Colors
+                                                            .grey.shade300,
+                                                        child: NeumorphicIcon(
+                                                          Icons.tag_faces,
+                                                          size:
+                                                              widget.textSize *
+                                                                  70,
+                                                          style:
+                                                              NeumorphicStyle(
+                                                                  color: color),
+                                                        ),
+                                                      )
+                                                    : InkWell(
+                                                        onTap: () {
+                                                          print(e[3]);
+                                                        },
+                                                        child: CircleAvatar(
+                                                          radius:
+                                                              widget.height *
+                                                                  (0.11 / 2),
+                                                          backgroundImage:
+                                                              NetworkImage(
+                                                                  e[3]),
+                                                        ),
+                                                      )),
+                                            SizedBox(
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  0.02,
+                                            ),
+                                            Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Text(
+                                                  e[2],
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.w700,
+                                                      color: color,
+                                                      fontSize: MediaQuery.of(
+                                                                  context)
+                                                              .textScaleFactor *
+                                                          25),
+                                                ),
+                                                SizedBox(
+                                                  height: widget.height * 0.01,
+                                                ),
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      e[0] + " " + e[1],
+                                                      textAlign: TextAlign.left,
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.w700,
+                                                          color: color,
+                                                          fontSize: MediaQuery.of(
+                                                                      context)
+                                                                  .textScaleFactor *
+                                                              20),
+                                                    ),
+                                                    SizedBox(
+                                                      width:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width *
+                                                              0.08,
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                            Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                IconButton(
+                                                    onPressed: () async {
+                                                      for (int i = 0;
+                                                          i <
+                                                              currentUser
+                                                                  .numberList
+                                                                  .length;
+                                                          i++) {
+                                                        if (currentUser
+                                                                    .numberList[
+                                                                i][2] ==
+                                                            e[2]) {
+                                                          setState(() {
+                                                            currentUser
+                                                                .numberList
+                                                                .removeAt(i);
+                                                          });
+
+                                                          break;
+                                                        }
+                                                      }
+                                                      await FirebaseDatabase
+                                                          .instance
+                                                          .ref("User")
+                                                          .child(currentUser
+                                                              .phoneNumber)
+                                                          .child(
+                                                              "phoneNumbersChosen")
+                                                          .set(currentUser
+                                                              .numberList);
+                                                    },
+                                                    icon: Icon(
+                                                      Icons.delete,
+                                                      color: Colors.red,
+                                                      size:
+                                                          widget.textSize * 50,
+                                                    )),
+                                                SizedBox(
+                                                  height: widget.height * 0.01,
+                                                )
+                                              ],
+                                            )
+                                          ],
+                                        ),
+                                        style: NeumorphicStyle(
+                                            boxShape:
+                                                NeumorphicBoxShape.roundRect(
+                                                    const BorderRadius.all(
+                                                        Radius.circular(45))),
+                                            depth: 15,
+                                            border: NeumorphicBorder(
+                                                color: color, width: 4),
+                                            color: Colors.grey.shade300,
+                                            shadowLightColor:
+                                                Colors.transparent,
+                                            lightSource: LightSource.topLeft,
+                                            shape: NeumorphicShape.concave),
+                                      ));
+                                  //return Text(e.toString());
                                 }).toList()
                               ],
                             ))
                       ]),
                 ),
+                Positioned(
+                    bottom: widget.height * 0.03,
+                    right: widget.width * 0.03,
+                    child: Container(
+                      height: widget.width * 0.17,
+                      width: widget.width * 0.17,
+                      margin: EdgeInsets.only(right: widget.width * 0.025),
+                      decoration: const BoxDecoration(
+                          color: Colors.blue,
+                          borderRadius: BorderRadius.all(Radius.circular(100))),
+                      child: Center(
+                        child: InkWell(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => AddPhoneNumberScreen(
+                                        currentUser,
+                                        widget.textSize))).whenComplete(() {
+                              setState(() {
+                                currentUser;
+                              });
+                            });
+                          },
+                          child: Icon(
+                            Icons.add_call,
+                            color: Colors.grey.shade300,
+                            size: widget.textSize * 30,
+                          ),
+                        ),
+                      ),
+                    ))
               ],
             )));
   }

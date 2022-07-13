@@ -272,7 +272,9 @@ class _DriveSafeHomePageState extends State<DriveSafeHomePage> {
                       width: width * (0.95),
                       height: height * ((0.46 / 2) + 0.04),
                       child: NeumorphicButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.of(context).pushNamed("DrivingScreen");
+                        },
                         child: Stack(
                           children: [
                             Lottie.network(

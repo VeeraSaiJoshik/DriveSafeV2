@@ -1,3 +1,4 @@
+import 'pages/drivingScreen.dart';
 import 'package:flutter/material.dart';
 import 'pages/main_page.dart';
 import 'pages/SignUpScreen.dart';
@@ -33,7 +34,8 @@ class MyApp extends StatelessWidget {
         "mainPage": ((context) => mainPage()),
         "SignUpPage": ((context) => SignUpScreen()),
         "LogInPage": ((context) => LogInScreen()),
-        "FriendSreen": ((context) => FriendScreen())
+        "FriendSreen": ((context) => FriendScreen()),
+        "DrivingScreen" : ((context) => DrivingScreen())
       },
     );
   }

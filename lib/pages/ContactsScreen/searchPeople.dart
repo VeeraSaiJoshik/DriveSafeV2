@@ -281,7 +281,7 @@ class _searchPeopleState extends State<searchPeople> {
               ),
             ),
             Container(
-                height: widget.height * 0.80,
+                height: widget.height * 0.85,
                 /*color: Colors.black,*/
                 //   color: Colors.pink,
                 child: Scrollbar(
