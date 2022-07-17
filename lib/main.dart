@@ -7,7 +7,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'pages/SignUpLoadScreen.dart';
 import 'pages/LogInPage.dart';
 import 'pages/ContactsScreen/FriendsScreen.dart';
-
+import 'pages/drivingTestScreen.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -35,7 +35,8 @@ class MyApp extends StatelessWidget {
         "SignUpPage": ((context) => SignUpScreen()),
         "LogInPage": ((context) => LogInScreen()),
         "FriendSreen": ((context) => FriendScreen()),
-        "DrivingScreen" : ((context) => DrivingScreen())
+        "DrivingScreen" : ((context) => DrivingScreen()),
+        "drivingTestScreen" : ((context) => drivingTestScreen())
       },
     );
   }

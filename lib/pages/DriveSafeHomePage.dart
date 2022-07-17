@@ -273,7 +273,7 @@ class _DriveSafeHomePageState extends State<DriveSafeHomePage> {
                       height: height * ((0.46 / 2) + 0.04),
                       child: NeumorphicButton(
                         onPressed: () {
-                          Navigator.of(context).pushNamed("DrivingScreen");
+                          Navigator.of(context).pushNamed("drivingTestScreen");
                         },
                         child: Stack(
                           children: [

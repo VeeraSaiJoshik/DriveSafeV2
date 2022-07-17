@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:cron/cron.dart';
 
 import 'package:flutter/material.dart';
 
@@ -17,7 +18,9 @@ class _DrivingScreenState extends State<DrivingScreen> {
   void initState() {
     super.initState();
     timer =
-        Timer.periodic(Duration(seconds: 11), (Timer t) => print("work d"));
+      Timer.periodic(const Duration(seconds: 10), (Timer t){
+        
+      });
   }
 
   @override
@@ -29,7 +32,7 @@ class _DrivingScreenState extends State<DrivingScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("so eya"),
+          title: Text(""),
         ),
         body: Center(child: Text("so yeah")));
   }
