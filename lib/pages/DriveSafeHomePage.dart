@@ -6,6 +6,9 @@ import 'package:lottie/lottie.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:telephony/telephony.dart';
+
+import 'DrivingChooseScreen.dart';
+
 class DriveSafeHomePage extends StatefulWidget {
   User UserProfile;
   DriveSafeHomePage(this.UserProfile);
@@ -19,7 +22,65 @@ class DriveSafeHomePage extends StatefulWidget {
 class _DriveSafeHomePageState extends State<DriveSafeHomePage> {
   @override
   late final AnimationController controller;
- 
+
+  Future<User> getUserData(String phoneNumber) async {
+    phoneNumber = phoneNumber.trim();
+    phoneNumber = phoneNumber.replaceAll(" ", "");
+    if (phoneNumber[0] != "+") {
+      phoneNumber = "+1" + phoneNumber;
+    }
+    final Data =
+        await FirebaseDatabase.instance.ref("User/" + phoneNumber).get();
+    List<String> friendsList = [];
+    List<String> requestList = [];
+    List friends = [];
+    List friendRequests = [];
+    List LocationSharingPeople = [];
+    List friendRequestsPending = [];
+    List location = [];
+    List numberList = [];
+    List chosenNumber = [];
+    Map data = Data.value as Map;
+    print(data);
+    if (data.containsKey("friends")) {
+      friends.addAll(data["friends"]);
+      print(friends);
+    }
+    if (data.containsKey("friendReqeusts")) {
+      friendRequests.addAll(data["friendReqeusts"]);
+    }
+    if (data.containsKey("locationSharingPeople")) {
+      LocationSharingPeople.addAll(data["locationSharingPeople"]);
+    }
+    if (data.containsKey("friendRequestsPending")) {
+      friendRequestsPending.addAll(data["friendRequestsPending"]);
+    }
+    if (data.containsKey("location")) {
+      location.addAll(["location"]);
+    }
+    if (data.containsKey("phoneNumbersChosen")) {
+      numberList.addAll(["phoneNumbersChosen"]);
+    }
+    if (data.containsKey("phoneNumbersChosen")) {
+      chosenNumber.addAll(data["phoneNumbersChosen"]);
+    }
+    return User(
+      data["firstName"],
+      data["lastName"],
+      data["phoneNumber"],
+      data["password"],
+      data["age"],
+      friends,
+      friendRequests,
+      friendRequestsPending,
+      LocationSharingPeople,
+      location,
+      data["image"],
+      data["numberApproved"],
+      data["locationTrackingOn"],
+      chosenNumber,
+    );
+  }
 
   Future<List<User>> getData() async {
     List<User> allUserList = [];
@@ -84,18 +145,20 @@ class _DriveSafeHomePageState extends State<DriveSafeHomePage> {
     });
     return allUserList;
   }
+
   bool? permissionGranted;
-  void initStateFunction(bool? permissionGranted)async{
+  void initStateFunction(bool? permissionGranted) async {
     permissionGranted = await Telephony.instance.requestPhoneAndSmsPermissions;
-    if(permissionGranted != null){
-      if(permissionGranted == false){
-        bool? permissionGranted = await Telephony.instance.requestSmsPermissions;
+    if (permissionGranted != null) {
+      if (permissionGranted == false) {
+        bool? permissionGranted =
+            await Telephony.instance.requestSmsPermissions;
       }
     }
   }
 
   late List<User> Allusers;
-  
+
   void initState() {
     initStateFunction(permissionGranted);
     getData().then((users) {
@@ -284,7 +347,13 @@ class _DriveSafeHomePageState extends State<DriveSafeHomePage> {
                       height: height * ((0.46 / 2) + 0.04),
                       child: NeumorphicButton(
                         onPressed: () {
-                          Navigator.of(context).pushNamed("drivingTestScreen");
+                          getUserData(widget.UserProfile.phoneNumber)
+                              .then((value) {
+                            Navigator.of(context)
+                                .push(MaterialPageRoute(builder: (context) {
+                              return drivingChooseScreen(value);
+                            }));
+                          });
                         },
                         child: Stack(
                           children: [

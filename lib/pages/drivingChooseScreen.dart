@@ -1,15 +1,17 @@
+import 'package:drivesafev2/pages/drivingScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:lottie/lottie.dart';
+import 'package:drivesafev2/models/User.dart';
+class drivingChooseScreen extends StatefulWidget {
+  User user;
 
-class drivingTestScreen extends StatefulWidget {
-  const drivingTestScreen({Key? key}) : super(key: key);
-
+  drivingChooseScreen(this.user);
   @override
-  _drivingTestScreenState createState() => _drivingTestScreenState();
+  drivingChooseScreenState createState() => drivingChooseScreenState();
 }
 
-class _drivingTestScreenState extends State<drivingTestScreen> {
+class drivingChooseScreenState extends State<drivingChooseScreen> {
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
@@ -114,7 +116,9 @@ class _drivingTestScreenState extends State<drivingTestScreen> {
                     height: height * 0.32,
                     margin: EdgeInsets.only(bottom: height * 0.02),
                     child: NeumorphicButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.of(context).push(MaterialPageRoute(builder : (context){return DrivingScreen(widget.user); }));
+                      },
                       child: Stack(
                         children: [
                           Lottie.network(

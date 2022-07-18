@@ -1,3 +1,4 @@
+import 'package:drivesafev2/pages/MapPageScreen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:drivesafev2/models/User.dart';
@@ -152,8 +153,44 @@ class MainFriendScreenState extends State<MainFriendScreen> {
     return allUserList;
   }
 
+  List<String> LocationSharingUsers = [];
+  Future<List<String>> getAllSharingUsers(User currentUser) async {
+    List<String> answer = [];
+
+    for (int i = 0; i < currentUser.friends.length; i++) {
+      List acceptedPhoneNumber = [];
+
+      await FirebaseDatabase.instance
+          .ref("User")
+          .child(currentUser.friends[i])
+          .child("locationSharingPeople")
+          .get()
+          .then((value) {
+        if (value.exists) {
+          acceptedPhoneNumber.addAll(value.value as List);
+        }
+      });
+
+      if (acceptedPhoneNumber == []) {
+        continue;
+      } else {
+        if (acceptedPhoneNumber.contains(currentUser.phoneNumber)) {
+          answer.add(currentUser.friends[i]);
+        } else {
+          continue;
+        }
+      }
+    }
+    print(answer);
+    return answer;
+  }
+
   void goToUserMapPage() async {
-    print("this is the function");
+    getAllSharingUsers(currentUser).then((value) {
+      Navigator.push(context, MaterialPageRoute(builder: (context) {
+        return MapPageScreen(currentUser, value);
+      }));
+    });
   }
 
   void collectData() async {
@@ -599,19 +636,20 @@ class MainFriendScreenState extends State<MainFriendScreen> {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   SizedBox(
-                    height: widget.height * 0.88,
+                    height: widget.height * 0.87,
                   ),
-                  Container(
-                    height: widget.width * 0.17,
-                    width: widget.width * 0.17,
-                    margin: EdgeInsets.only(right: widget.width * 0.025),
-                    decoration: const BoxDecoration(
-                        color: Colors.blue,
-                        borderRadius: BorderRadius.all(Radius.circular(100))),
-                    child: Center(
-                      child: InkWell(
-                        onTap: () {
-                        },
+                  InkWell(
+                    onTap: () {
+                      goToUserMapPage();
+                    },
+                    child: Container(
+                      height: widget.width * 0.17,
+                      width: widget.width * 0.17,
+                      margin: EdgeInsets.only(right: widget.width * 0.025),
+                      decoration: const BoxDecoration(
+                          color: Colors.blue,
+                          borderRadius: BorderRadius.all(Radius.circular(100))),
+                      child: Center(
                         child: Icon(
                           Icons.map,
                           color: Colors.grey.shade300,

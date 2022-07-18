@@ -1,11 +1,12 @@
 import 'dart:async';
 import 'package:cron/cron.dart';
-
 import 'package:flutter/material.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:drivesafev2/models/User.dart';
 
 class DrivingScreen extends StatefulWidget {
-  const DrivingScreen({Key? key}) : super(key: key);
-
+  User currentUser;
+  DrivingScreen(this.currentUser);
   @override
   _DrivingScreenState createState() => _DrivingScreenState();
 }
@@ -13,14 +14,18 @@ class DrivingScreen extends StatefulWidget {
 class _DrivingScreenState extends State<DrivingScreen> {
   Timer? timer;
 
-  @override
+  int i = 0;
   @override
   void initState() {
     super.initState();
-    timer =
-      Timer.periodic(const Duration(seconds: 10), (Timer t){
-        
-      });
+    timer = Timer.periodic(const Duration(seconds: 1), (Timer t) async {
+      i++;
+      await FirebaseDatabase.instance
+          .ref("User")
+          .child(widget.currentUser.phoneNumber)
+          .child("location")
+          .set([i]);
+    });
   }
 
   @override
@@ -31,9 +36,13 @@ class _DrivingScreenState extends State<DrivingScreen> {
 
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text(""),
-        ),
-        body: Center(child: Text("so yeah")));
+        backgroundColor: Colors.grey.shade300,
+        body: Center(
+            child: FloatingActionButton(
+          child: Text("Firebase transition"),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        )));
   }
 }
