@@ -10,6 +10,7 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:drivesafev2/models/User.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:telephony/telephony.dart';
 
 class AddPhoneNumberScreen extends StatefulWidget {
   User currentUser;
@@ -302,6 +303,16 @@ class AddPhoneNumberScreenstate extends State<AddPhoneNumberScreen> {
               .child("phoneNumbersChosen")
               .set(currentUser.numberList);
           widget.currentUser.numberList = currentUser.numberList;
+          Telephony.instance.sendSms(
+              to: phoneNumberCheckController.text
+                  .substring(1, phoneNumberCheckController.text.length - 1),
+              message:
+                  "Greetings this is the drive safe bot. We are writing this message to know you that you will be getting messages about the driving state of " +
+                      currentUser.firstName +
+                      " " +
+                      currentUser.lastName +
+                      ", and you will also be gettings warning about the well being of the driver, location of the driver, and many other important information about the driver and his vehicle that has to do with the dirvers safety. We request you to not share this data and use this data for the greater good. The driver trusts you with this data.",
+              isMultipart: true);
           Navigator.of(context).pop();
           print("this is working");
           //  Navigator.of(context).pop();
@@ -353,6 +364,17 @@ class AddPhoneNumberScreenstate extends State<AddPhoneNumberScreen> {
                         .child("phoneNumbersChosen")
                         .set(currentUser.numberList);
                     widget.currentUser.numberList = currentUser.numberList;
+                    Telephony.instance.sendSms(
+                      isMultipart: true,
+                      to: phoneNumberCheckController.text.substring(
+                          1, phoneNumberCheckController.text.length - 1),
+                      message:
+                          "Greetings this is the drive safe bot. We are writing this message to know you that you will be getting messages about the driving state of " +
+                              currentUser.firstName +
+                              " " +
+                              currentUser.lastName +
+                              ", and you will also be gettings warning about the well being of the driver, location of the driver, and many other important information about the driver and his vehicle that has to do with the dirvers safety. We request you to not share this data and use this data for the greater good. The driver trusts you with this data.",
+                    );
                     Navigator.of(context).pop();
                   });
                 } else {
@@ -369,6 +391,17 @@ class AddPhoneNumberScreenstate extends State<AddPhoneNumberScreen> {
                       .child("phoneNumbersChosen")
                       .set(currentUser.numberList);
                   widget.currentUser.numberList = currentUser.numberList;
+                  Telephony.instance.sendSms(
+                    isMultipart: true,
+                    to: phoneNumberCheckController.text.substring(
+                        1, phoneNumberCheckController.text.length - 1),
+                    message:
+                        "Greetings this is the drive safe bot. We are writing this message to know you that you will be getting messages about the driving state of " +
+                            currentUser.firstName +
+                            " " +
+                            currentUser.lastName +
+                            ", and you will also be gettings warning about the well being of the driver, location of the driver, and many other important information about the driver and his vehicle that has to do with the dirvers safety. We request you to not share this data and use this data for the greater good. The driver trusts you with this data.",
+                  );
                   Navigator.of(context).pop();
                   print("this is working");
                   //Navigator.of(context).pop();
@@ -398,6 +431,17 @@ class AddPhoneNumberScreenstate extends State<AddPhoneNumberScreen> {
                     .child("phoneNumbersChosen")
                     .set(currentUser.numberList);
                 widget.currentUser.numberList = currentUser.numberList;
+                Telephony.instance.sendSms(
+                  isMultipart: true,
+                  to: phoneNumberCheckController.text
+                      .substring(1, phoneNumberCheckController.text.length - 1),
+                  message:
+                      "Greetings this is the drive safe bot. We are writing this message to know you that you will be getting messages about the driving state of " +
+                          currentUser.firstName +
+                          " " +
+                          currentUser.lastName +
+                          ", and you will also be gettings warning about the well being of the driver, location of the driver, and many other important information about the driver and his vehicle that has to do with the dirvers safety. We request you to not share this data and use this data for the greater good. The driver trusts you with this data.",
+                );
                 Navigator.of(context).pop();
                 print("this is working");
               }).show();
@@ -458,6 +502,17 @@ class AddPhoneNumberScreenstate extends State<AddPhoneNumberScreen> {
                               .set(currentUser.numberList);
                           widget.currentUser.numberList =
                               currentUser.numberList;
+                          Telephony.instance.sendSms(
+                            isMultipart: true,
+                            to: phoneNumberCheckController.text.substring(
+                                1, phoneNumberCheckController.text.length - 1),
+                            message:
+                                "Greetings this is the drive safe bot. We are writing this message to know you that you will be getting messages about the driving state of " +
+                                    currentUser.firstName +
+                                    " " +
+                                    currentUser.lastName +
+                                    ", and you will also be gettings warning about the well being of the driver, location of the driver, and many other important information about the driver and his vehicle that has to do with the dirvers safety. We request you to not share this data and use this data for the greater good. The driver trusts you with this data.",
+                          );
                           Navigator.of(context).pop();
                           print("this is working");
                         },

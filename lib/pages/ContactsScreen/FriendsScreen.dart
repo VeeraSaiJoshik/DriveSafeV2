@@ -6,6 +6,7 @@ import 'AcceptFriendScreen.dart';
 import 'PhoneNumber.dart';
 import 'MainFriendScreen.dart';
 import 'package:drivesafev2/models/User.dart';
+import 'package:telephony/telephony.dart';
 
 class FriendScreen extends StatefulWidget {
   const FriendScreen({Key? key}) : super(key: key);
@@ -16,6 +17,7 @@ class FriendScreen extends StatefulWidget {
 
 class _FriendScreenState extends State<FriendScreen> {
   int index = 0;
+  
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;

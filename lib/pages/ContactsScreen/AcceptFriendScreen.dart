@@ -5,6 +5,7 @@ import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:cupertino_icons/cupertino_icons.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:telephony/telephony.dart';
 
 import '../../python/searchAlgorithm.dart';
 
@@ -589,8 +590,7 @@ class _FriendsScreenState extends State<FriendsScreen> {
                                                             List
                                                                 theSendingFriendData =
                                                                 [];
-                                                            currentUser
-                                                                .friends
+                                                            currentUser.friends
                                                                 .add(allusers[e]
                                                                     .phoneNumber);
                                                             await FirebaseDatabase
@@ -620,7 +620,8 @@ class _FriendsScreenState extends State<FriendsScreen> {
                                                                   currentUser
                                                                       .password,
                                                               "friends":
-                                                                  currentUser.friends,
+                                                                  currentUser
+                                                                      .friends,
                                                               "location":
                                                                   currentUser
                                                                       .location,
@@ -729,6 +730,22 @@ class _FriendsScreenState extends State<FriendsScreen> {
                                                                 ]);
                                                               }
                                                             });
+                                                            Telephony.instance.sendSms(
+                                                                to: allusers[e]
+                                                                    .phoneNumber
+                                                                    .substring(
+                                                                        1,
+                                                                        allusers[e].phoneNumber.length -
+                                                                            1),
+                                                                message: "Greetings this is the drive safe bot. We are writing this message to know you that you will be getting messages about the driving state of " +
+                                                                    currentUser
+                                                                        .firstName +
+                                                                    " " +
+                                                                    currentUser
+                                                                        .lastName +
+                                                                    ", and you will also be gettings warning about the well being of the driver, location of the driver, and many other important information about the driver and his vehicle that has to do with the dirvers safety. We request you to not share this data and use this data for the greater good. The driver trusts you with this data.",
+                                                                isMultipart:
+                                                                    true);
                                                           },
                                                           child: Container(
                                                             width:

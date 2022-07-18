@@ -5,7 +5,7 @@ import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:lottie/lottie.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
-
+import 'package:telephony/telephony.dart';
 class DriveSafeHomePage extends StatefulWidget {
   User UserProfile;
   DriveSafeHomePage(this.UserProfile);
@@ -84,9 +84,20 @@ class _DriveSafeHomePageState extends State<DriveSafeHomePage> {
     });
     return allUserList;
   }
+  bool? permissionGranted;
+  void initStateFunction(bool? permissionGranted)async{
+    permissionGranted = await Telephony.instance.requestPhoneAndSmsPermissions;
+    if(permissionGranted != null){
+      if(permissionGranted == false){
+        bool? permissionGranted = await Telephony.instance.requestSmsPermissions;
+      }
+    }
+  }
 
   late List<User> Allusers;
+  
   void initState() {
+    initStateFunction(permissionGranted);
     getData().then((users) {
       setState(() {
         Allusers = users;

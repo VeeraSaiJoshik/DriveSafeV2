@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:telephony/telephony.dart';
 import '../../models/User.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -342,6 +343,18 @@ class _PhoneNumberScreenState extends State<PhoneNumberScreen> {
                                                               "phoneNumbersChosen")
                                                           .set(currentUser
                                                               .numberList);
+                                                      Telephony.instance.sendSms(
+                                                          to: e[2].substring(
+                                                              1,
+                                                              e[2].text.length -
+                                                                  1),
+                                                          message:
+                                                              "Greetings this is the drive safe bot. We are writing this message to let you know that you have been removed from " +
+                                                                  e[0] +
+                                                                  " " +
+                                                                  e[1] +
+                                                                  "'s number list, and hence wont be recieving data about his driving anymore. ",
+                                                          isMultipart: true);
                                                     },
                                                     icon: Icon(
                                                       Icons.delete,

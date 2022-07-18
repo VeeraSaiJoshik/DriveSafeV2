@@ -54,7 +54,7 @@ class _drivingTestScreenState extends State<drivingTestScreen> {
                                 style: TextStyle(
                                     fontSize:
                                         MediaQuery.of(context).textScaleFactor *
-                                            35,
+                                            30,
                                     color: Colors.grey.shade300,
                                     fontWeight: FontWeight.w800),
                               ),
