@@ -14,39 +14,17 @@ class MapPageScreen extends StatefulWidget {
 
 class _MapPageScreenState extends State<MapPageScreen> {
   @override
-  List<Timer> timers = [];
-  List<List> locations = [];
+  List<DatabaseReference> listeners = [];
   void initState() {
-    print(widget.LocationSharingUsers.length);
-
     for (int i = 0; i < widget.LocationSharingUsers.length; i++) {
-      locations.add([]);
-    }
-    for (int i = 0; i < widget.LocationSharingUsers.length; i++) {
-      timers.add(Timer.periodic(const Duration(seconds: 1), (Timer t) async {
-        await FirebaseDatabase.instance
-            .ref("User")
-            .child(widget.LocationSharingUsers[i])
-            .child("location")
-            .get()
-            .then((value) {
-          setState(() {
-            locations[i] = value.value as List;
-          });
-        });
-        print(locations);
-        print("here");
-      }));
+      FirebaseDatabase.instance
+          .ref("User/" + widget.LocationSharingUsers[i] + "/location")
+          .onValue
+          .listen((event) {
+        print(event.snapshot.value);
+      });
     }
     super.initState();
-  }
-
-  @override
-  void dispose() {
-    for (int k = 0; k < timers.length; k++) {
-      timers[k].cancel();
-    }
-    super.dispose();
   }
 
   Widget build(BuildContext context) {
@@ -62,3 +40,5 @@ class _MapPageScreenState extends State<MapPageScreen> {
     );
   }
 }
+
+class LocationSharingUsers {}
